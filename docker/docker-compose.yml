@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  node:
+    image: node:14.17.0-stretch
+    working_dir: /var/www/app
+    volumes:
+    - ../backend:/var/www/app
+    - ../public:/var/www/app/public
+    command: bash -c "
+      npm i
+      && npm start"
+    networks:
+      - backend
+    ports:
+    - 5000:5000
+    - 9229:9229
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - backend
+
+
+networks:
+#  frontend:
+#    external:
+#      name: proxy_proxy
+  backend:
