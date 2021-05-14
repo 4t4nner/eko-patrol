@@ -26,37 +26,38 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .auth {
   position: relative;
   height: 100vh;
   padding-top: 100px;
   text-align: center;
-}
-.welcome-logo {
-  width: 200px;
-  height: 200px;
-  margin: 0 auto 30px;
-  border-radius: 50%;
-  background: #c4c4c4;
-}
-.welcome-text {
-  font-size: 24px;
-  line-height: 28px;
-}
-.auth-footer {
-  position: absolute;
-  left: 50%;
-  bottom: 50px;
-  transform: translateX(-50%);
-  width: 100%;
-  font-size: 14px;
-  line-height: 16px;
-}
-.footer-login {
-  margin-bottom: 10px;
-}
-.footer-reg_link {
-  text-decoration: underline;
+
+  .welcome-logo {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+    border-radius: 50%;
+    background: #c4c4c4;
+  }
+  .welcome-text {
+    font-size: 24px;
+    line-height: 28px;
+  }
+  .auth-footer {
+    position: absolute;
+    left: 50%;
+    bottom: 50px;
+    transform: translateX(-50%);
+    width: 100%;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .footer-login {
+    margin-bottom: 10px;
+  }
+  .footer-reg_link {
+    text-decoration: underline;
+  }
 }
 </style>

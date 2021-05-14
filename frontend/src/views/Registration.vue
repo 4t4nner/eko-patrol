@@ -31,20 +31,21 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .registration {
   margin: 0 auto;
   text-align: center;
   padding: 20px;
-}
-.avatar-wrapper {
-  margin: 0 auto 10px;
-  width: 200px;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #c4c4c4;
-  border-radius: 50%;
+
+  .avatar-wrapper {
+    margin: 0 auto 10px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #c4c4c4;
+    border-radius: 50%;
+  }
 }
 </style>

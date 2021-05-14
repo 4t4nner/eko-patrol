@@ -27,19 +27,20 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .login {
   padding: 100px 20px 20px;
   text-align: center;
-}
-.login-logo {
-  margin: 0 auto 50px;
-  width: 200px;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #c4c4c4;
-  border-radius: 50%;
+
+  .login-logo {
+    margin: 0 auto 50px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #c4c4c4;
+    border-radius: 50%;
+  }
 }
 </style>

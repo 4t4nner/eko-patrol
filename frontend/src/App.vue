@@ -11,6 +11,5 @@
   max-width: 425px;
   width: 100%;
   margin: 0 auto;
-  font-family: 'Roboto', sans-serif;
 }
 </style>
