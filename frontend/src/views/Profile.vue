@@ -54,7 +54,9 @@ export default {
 
 <style lang="scss">
 .profile {
+  height: calc(100vh - 60px);
   padding: 0 20px;
+  overflow-x: hidden;
   text-align: center;
 
   .info-inner {
