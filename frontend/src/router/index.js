@@ -7,8 +7,23 @@ const routes = [
   {
     path: '/',
     name: 'Auth',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Auth.vue')
+    component: () => import(/* webpackChunkName: "auth" */ '../views/Auth.vue')
   },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+  },
+  {
+    path: '/registration',
+    name: 'Registration',
+    component: () => import(/* webpackChunkName: "reg" */ '../views/Registration.vue')
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: () => import(/* webpackChunkName: "reg" */ '../views/Profile.vue')
+  }
 ]
 
 const router = new VueRouter({
