@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="page">
     <router-view />
-    <navigation v-if="isVisibleFooter"/>
+    <navigation v-if="isVisibleFooterAndHeader"/>
   </div>
 </template>
 
@@ -14,7 +14,7 @@ export default {
     Navigation
   },
   computed: {
-    isVisibleFooter() {
+    isVisibleFooterAndHeader() {
       return this.$route.name !== 'Auth' && this.$route.name !== 'Login' && this.$route.name !== 'Registration'
     }
   }

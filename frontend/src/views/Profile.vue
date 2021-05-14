@@ -1,5 +1,6 @@
 <template>
   <div class="profile">
+    <Header />
     <div class="info-wrapper">
       <div class="info-inner">
         <div class="info-icon"></div>
@@ -7,11 +8,11 @@
           <div class="info-content_name">Имя</div>
           <div class="info-content-rating">
             <div class="info-content-starbar">
-              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon"/>
-              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon"/>
-              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon"/>
-              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon"/>
-              <star-icon class="info-content-starbar_icon"/>
+              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon" />
+              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon" />
+              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon" />
+              <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon" />
+              <star-icon class="info-content-starbar_icon" />
             </div>
             <div class="info-content_rating">4.0</div>
           </div>
@@ -20,15 +21,21 @@
       <div class="exp-wrapper">
         <div class="exp-bar-wrapper">
           <div class="exp-bar_text">3000/5000</div>
-          <k-progress :percent="30" :color="'#F38181'" :bg-color="'#FCE38A'" :show-text="false" class="progress-bar_item"/>
+          <k-progress
+            :percent="30"
+            :color="'#F38181'"
+            :bg-color="'#FCE38A'"
+            :show-text="false"
+            class="progress-bar_item"
+          />
         </div>
         <div class="exp_text">04</div>
       </div>
     </div>
     <div class="active-event-wrapper">
       <div class="active-event-header">
-          <button class="active-event-header_btn btn">Я участник</button>
-          <button class="active-event-header_btn btn">Я организатор</button>
+        <button class="active-event-header_btn btn">Я участник</button>
+        <button class="active-event-header_btn btn">Я организатор</button>
       </div>
       <div class="active-event-body">
         <div class="body-title">Текущие ивенты</div>
@@ -40,12 +47,14 @@
 </template>
 
 <script>
+import Header from '../components/Header'
 import StarIcon from '../components/svg/StarIcon'
-import CompactEventCard from "../components/CompactEventCard";
+import CompactEventCard from '../components/CompactEventCard'
 
 export default {
   name: 'Profile',
   components: {
+    Header,
     StarIcon,
     CompactEventCard
   }
@@ -107,7 +116,8 @@ export default {
     line-height: 16px;
     text-align: right;
   }
-  .progress-bar_item, .exp-bar_text {
+  .progress-bar_item,
+  .exp-bar_text {
     width: 215px;
   }
   .progress-bar_item {
@@ -141,7 +151,7 @@ export default {
     font-size: 14px;
     line-height: 16px;
     white-space: nowrap;
-    
+
     &:before {
       position: absolute;
       content: '';

@@ -53,31 +53,32 @@ export default {
   padding: 8px 15px 10px;
   background: $yellow;
   text-align: center;
-}
-.navigation-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-top: -10px;
-}
-.navigation-item__active {
-  position: relative;
 
-  &:before {
-    position: absolute;
-    content: '';
-    width: 65px;
-    height: 65px;
-    top: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: $yellow;
-    border-radius: 50%;
-    z-index: -1;
+  .navigation-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: -10px;
   }
+  .navigation-item__active {
+    position: relative;
 
-  & .navigation-item_icon {
-    width: 40px;
+    &:before {
+      position: absolute;
+      content: '';
+      width: 65px;
+      height: 65px;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: $yellow;
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    & .navigation-item_icon {
+      width: 40px;
+    }
   }
 }
 </style>
