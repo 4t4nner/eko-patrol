@@ -25,24 +25,49 @@ const routes = [
     component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue')
   },
   {
+    path: '/profile/:locationId',
+    name: 'Profile location id',
+    component: () => import(/* webpackChunkName: "profile location id" */ '../views/Location.vue')
+  },
+  {
     path: '/search',
     name: 'Search',
     component: () => import(/* webpackChunkName: "search" */ '../views/Search.vue')
   },
   {
     path: '/search/locations',
-    name: 'Locations',
-    component: () => import(/* webpackChunkName: "locations" */ '../views/Locations.vue')
+    name: 'Search locations',
+    component: () => import(/* webpackChunkName: "search locations" */ '../views/LocationList.vue')
+  },
+  {
+    path: '/search/locations/:locationId',
+    name: 'Search locations id',
+    component: () => import(/* webpackChunkName: "search locations id" */ '../views/Location.vue')
+  },
+  {
+    path: '/search/reconciliation',
+    name: 'Search reconciliation',
+    component: () => import(/* webpackChunkName: "search reconciliation" */ '../views/LocationList.vue')
+  },
+  {
+    path: '/search/reconciliation/:locationId',
+    name: 'Search reconciliation id',
+    component: () => import(/* webpackChunkName: "search reconciliation id" */ '../views/Location.vue')
   },
   {
     path: '/history',
     name: 'History',
-    component: () => import(/* webpackChunkName: "history" */ '../views/History.vue')
+    component: () => import(/* webpackChunkName: "history" */ '../views/LocationList.vue')
+  },
+  {
+    path: '/history/:locationId',
+    name: 'History id',
+    component: () => import(/* webpackChunkName: "history id" */ '../views/Location.vue')
   },
   {
     path: '/offer',
     name: 'Offer',
-    component: () => import(/* webpackChunkName: "offer" */ '../views/Offer.vue')
+    component: () => import(/* webpackChunkName: "offer" */ '../views/Location.vue')
   }
 ]
 

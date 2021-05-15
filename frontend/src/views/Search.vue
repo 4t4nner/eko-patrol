@@ -11,7 +11,7 @@
       </div>
       <div class="search-item">
         <router-link
-          to="/search/locations?option=reconciliation"
+          to="/search/reconciliation"
           class="btn btn__arrow search-item_link"
           >Оценка</router-link
         >
@@ -31,6 +31,9 @@ export default {
   name: 'Search',
   components: {
     Header
+  },
+  mounted() {
+    this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/search')
   }
 }
 </script>

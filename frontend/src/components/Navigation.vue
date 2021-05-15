@@ -1,54 +1,14 @@
 <template>
   <div class="navigation">
     <div class="navigation-wrapper">
-      <div class="navigation-item navigation-item__active">
-        <router-link to="/profile" class="navigation-item_link">
+      <div v-for="(item, idx) of navigationList" :key="`navigation-item-${idx}`" :class="{'navigation-item__active': isActiveItem(item)}" class="navigation-item" >
+        <router-link :to="item.link" class="navigation-item_link">
           <img
-            src="../assets/img/profile-icon.svg"
+            :src="require(`../assets/img/${item.icon}`)"
             alt="icon"
             class="navigation-item_icon"
           />
-          <div class="navigation-item_text">Профиль</div>
-        </router-link>
-      </div>
-      <div class="navigation-item">
-        <router-link to="/search" class="navigation-item_link">
-          <img
-            src="../assets/img/search-icon.svg"
-            alt="icon"
-            class="navigation-item_icon"
-          />
-          <div class="navigation-item_text">Поиск</div>
-        </router-link>
-      </div>
-      <div class="navigation-item">
-        <router-link to="/history" class="navigation-item_link">
-          <img
-            src="../assets/img/history-icon.svg"
-            alt="icon"
-            class="navigation-item_icon"
-          />
-          <div class="navigation-item_text">История</div>
-        </router-link>
-      </div>
-      <div class="navigation-item">
-        <router-link to="/offer" class="navigation-item_link">
-          <img
-            src="../assets/img/offer-icon.svg"
-            alt="icon"
-            class="navigation-item_icon"
-          />
-          <div class="navigation-item_text">Предложить</div>
-        </router-link>
-      </div>
-      <div class="navigation-item">
-        <router-link to="/shop" class="navigation-item_link">
-          <img
-            src="../assets/img/shop-icon.svg"
-            alt="icon"
-            class="navigation-item_icon"
-          />
-          <div class="navigation-item_text">Магазин</div>
+          <div class="navigation-item_text">{{ item.title }}</div>
         </router-link>
       </div>
     </div>
@@ -59,12 +19,53 @@
 <script>
 export default {
   name: 'Navigation',
+  data() {
+    return {
+      navigationList: [
+        {
+          link: '/profile',
+          icon: 'profile-icon.svg',
+          title: 'Профиль'
+        },
+        {
+          link: '/search',
+          icon: 'search-icon.svg',
+          title: 'Поиск'
+        },
+        {
+          link: '/offer',
+          icon: 'offer-icon.svg',
+          title: 'Предложить'
+        },
+        {
+          link: '/history',
+          icon: 'history-icon.svg',
+          title: 'История'
+        },
+        {
+          link: '/shop',
+          icon: 'shop-icon.svg',
+          title: 'Магазин'
+        }
+      ]
+    }
+  },
   computed: {
     isVisiblePrevLink() {
-      return this.$route.name === 'Locations'
+      return (
+        this.$route.name === 'Profile location id' ||
+        this.$route.name === 'Search locations' ||
+        this.$route.name === 'Search locations id' ||
+        this.$route.name === 'Search reconciliation' ||
+        this.$route.name === 'Search reconciliation id' ||
+        this.$route.name === 'History id'
+      )
     }
   },
   methods: {
+    isActiveItem(item) {
+      return this.$store.getters.activeRootePage === item.link
+    },
     handler() {
       this.$router.go(-1)
     }
@@ -114,18 +115,19 @@ export default {
   .prev-page {
     position: absolute;
     bottom: 100px;
-    left: 30px;
-    width: 34px;
-    height: 34px;
+    left: -25px;
+    width: 45px;
+    height: 45px;
     background: $yellow;
     border-radius: 50%;
+    cursor: pointer;
 
     &:before {
       position: absolute;
       content: '';
       top: 50%;
       transform: translate(-50%, -50%);
-      left: 50%;
+      left: 75%;
       width: 11px;
       height: 1px;
       background: #000;
@@ -135,7 +137,7 @@ export default {
       content: '';
       top: 50%;
       transform: translate(-50%, -50%) rotate(-135deg);
-      left: 40%;
+      left: 69%;
       width: 5px;
       height: 5px;
       border-top: 1px solid #000;

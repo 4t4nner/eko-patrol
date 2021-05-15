@@ -9,7 +9,9 @@
         class="custom-radio-item_input"
         type="radio"
       />
-      <label :for="option.id" class="custom-radio-item_label">{{ option.value }}</label>
+      <label :for="option.id" class="custom-radio-item_label">{{
+        option.value
+      }}</label>
     </div>
   </div>
 </template>

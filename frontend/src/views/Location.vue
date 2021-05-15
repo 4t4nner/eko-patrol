@@ -1,7 +1,7 @@
 <template>
-  <div class="offer">
+  <div class="location">
     <Header style="padding: 0 20px" />
-    <div class="offer-wrapper">
+    <div class="location-wrapper">
       <Map />
       <event-card />
     </div>
@@ -14,17 +14,22 @@ import Map from '../components/Map'
 import EventCard from '../components/EventCard'
 
 export default {
-  name: 'Offer',
+  name: 'Location',
   components: {
     Header,
     Map,
     EventCard
+  },
+  mounted() {
+    if (this.$route.name === 'Offer') {
+      this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/offer')
+    }
   }
 }
 </script>
 
 <style lang="scss">
-.offer {
+.location {
   height: calc(100vh - 60px);
   overflow-x: hidden;
   text-align: center;

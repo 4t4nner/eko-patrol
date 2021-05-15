@@ -61,16 +61,16 @@ export default {
 .custom-select .selected {
   padding: 5px 15px;
   background-color: #fff;
-  border-radius: 6px;
-  border: 1px solid #c2c2c2;
+  border-radius: 13px;
+  border: 1px solid #232323;
   color: #000;
   cursor: pointer;
   user-select: none;
 }
 
 .custom-select .selected.open {
-  border: 1px solid #c2c2c2;
-  border-radius: 6px 6px 0 0;
+  border: 1px solid #232323;
+  border-radius: 13px 13px 0 0;
 }
 
 .custom-select .selected:after {
@@ -87,11 +87,11 @@ export default {
 
 .custom-select .items {
   color: #fff;
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 13px 13px;
   overflow: hidden;
-  border-right: 1px solid #c2c2c2;
-  border-left: 1px solid #c2c2c2;
-  border-bottom: 1px solid #c2c2c2;
+  border-right: 1px solid #232323;
+  border-left: 1px solid #232323;
+  border-bottom: 1px solid #232323;
   position: absolute;
   background-color: #fff;
   left: 0;

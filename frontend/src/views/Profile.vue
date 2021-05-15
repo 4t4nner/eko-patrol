@@ -39,8 +39,12 @@
       </div>
       <div class="active-event-body">
         <div class="body-title">Текущие ивенты</div>
-        <compact-event-card />
-        <compact-event-card />
+        <router-link to="/profile/1">
+          <compact-event-card />
+        </router-link>
+        <router-link to="/profile/2">
+          <compact-event-card />
+        </router-link>
       </div>
     </div>
   </div>
@@ -57,6 +61,9 @@ export default {
     Header,
     StarIcon,
     CompactEventCard
+  },
+  mounted() {
+    this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/profile')
   }
 }
 </script>

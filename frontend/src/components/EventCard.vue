@@ -3,7 +3,14 @@
     <div class="card-header">
       <div class="card-header-img">Добавить фото</div>
       <div class="card-header-info">
-        <input-text :label="'Награда'" :name="'reward'" :isSmall="true" />
+        <input-text
+          v-if="isVisibleOrganizedInput"
+          :label="'Организатор'"
+          :name="'organizer'"
+          :isSmall="true"
+          :readOnly="true"
+        />
+        <input-text :label="'Награда'" :name="'reward'" :isSmall="true" :readOnly="isReadOnlyRewardInput"/>
       </div>
     </div>
     <div class="card-body">
@@ -31,7 +38,9 @@
       </div>
     </div>
     <div class="card-body-footer">
-      <button class="card-body-footer_btn btn">Предложить</button>
+      <button class="card-body-footer_btn btn" v-if="isVisibleOfferButton">
+        Предложить
+      </button>
     </div>
   </div>
 </template>
@@ -86,6 +95,17 @@ export default {
       ]
     }
   },
+  computed: {
+    isVisibleOfferButton() {
+      return this.$route.name === 'Offer'
+    },
+    isVisibleOrganizedInput() {
+      return this.$route.name === 'Profile location id'
+    },
+    isReadOnlyRewardInput() {
+      return this.$route.name !== 'Offer'
+    }
+  },
   methods: {
     inputHandler(val) {
       this.selected = val
@@ -93,7 +113,6 @@ export default {
     radioHandler(val) {
       this.radioSelect = val
     }
-
   }
 }
 </script>

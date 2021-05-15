@@ -1,7 +1,7 @@
 <template>
   <div class="input" :class="{ input__small: isSmall }">
     <label class="input_label">{{ label }}</label>
-    <input :type="type" :name="name" class="input_item" />
+    <input :type="type" :name="name" :readonly="readOnly" class="input_item" />
   </div>
 </template>
 
@@ -25,6 +25,11 @@ export default {
       default: ''
     },
     isSmall: {
+      type: Boolean,
+      require: false,
+      default: false
+    },
+    readOnly: {
       type: Boolean,
       require: false,
       default: false
@@ -54,6 +59,8 @@ export default {
   }
 
   &.input__small {
+    margin-bottom: 10px;
+
     .input_label {
       padding-left: 5px;
       font-size: 10px;
