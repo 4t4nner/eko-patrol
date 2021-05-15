@@ -42,7 +42,7 @@ const upload = multer({ storage: storage });
 
 app.use(cors());
 // @ts-ignore
-// app.options('*', cors());  // enable pre-flight
+app.options('*', cors());  // enable pre-flight
 
 app.set('view engine', 'html');
 app.engine('html', ejs.renderFile);
@@ -204,8 +204,14 @@ app.post('/user', upload.any(), (req, res) => {
 
     let [cols, vals] = getInsParams(req.body,['photo','name','phone','email','rating','score']);
 
+    if(cols.length < 2){
+        res.status(400).send('wrong fields');
+    }
+
     batchInsert('user', cols, [vals]).then(id => {
         res.send(id[0]);
+    }).catch(e => {
+        res.status(500).send(e);
     });
 });
 
