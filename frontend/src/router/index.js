@@ -33,6 +33,11 @@ const routes = [
     path: '/search/locations',
     name: 'Locations',
     component: () => import(/* webpackChunkName: "reg" */ '../views/Locations.vue')
+  },
+  {
+    path: '/history',
+    name: 'History',
+    component: () => import(/* webpackChunkName: "reg" */ '../views/History.vue')
   }
 ]
 
