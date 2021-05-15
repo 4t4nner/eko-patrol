@@ -178,21 +178,24 @@ app.get('/location', async (req,res) => {
 app.post('/location/:id?', upload.any(), async (req, res) => {
     try {
 
-        debugger;
         let files:Express.Multer.File[] = req.files as Express.Multer.File[];
         const confirmers = req.body.confirmers;
         const participants = req.body.participants;
         const id = req.params.id;
-        const photoIds:number[] = await saveLocPhotos(files);
+
+        let photoIds:number[];
+        if(files){
+            photoIds = await saveLocPhotos(files);
+        }
         debugger;
         let location: Record<string,any> = {
             ...(id ? {} : {creation_date: formatDate()})
         };
-        ['geotag', 'org', 'status', 'reward', 'square', 'availability'].forEach(n => {
+        ['geotag', 'org', 'status', 'reward', 'square', 'availability', 'contamination'].forEach(n => {
             location[n] = req.body[n];
         });
         ['start_date', 'end_date'].forEach(n => {
-            location[n] = req.body[n];
+            location[n] = formatDate(req.body[n]);
         });
 
         let addedLocation;

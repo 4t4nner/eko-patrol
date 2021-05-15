@@ -29,6 +29,7 @@ fetch('/location', {
         start_date: new Date(),
         end_date: new Date(),
         org: 1,
+        contamination: 1,
         status: 'start', // end or whatever
         reward: 1.4, // награда
         square: 1.4, // площадь
