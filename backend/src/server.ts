@@ -208,7 +208,8 @@ app.post('/user', upload.any(), (req, res) => {
         res.send(id[0]);
     });
 });
-app.put('/user/:id', upload.any(), (req, res) => {
+
+app.post('/user/:id', upload.any(), (req, res) => {
 
     let [cols, vals] = getInsParams(req.body,['photo','name','phone','email','rating','score']);
 

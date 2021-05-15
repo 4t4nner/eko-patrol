@@ -1,0 +1,3 @@
+INSERT INTO eko_patrol.user (id, photo, name, phone, email, rating, score) VALUES (1, '/public/1b329264-75a0-413a-9d64-65c04d9b44da_photo_2020-07-08_11-30-44.jpg', 'test1', '+71231232222', 'name@mail.com', 2.1, 30);
+INSERT INTO eko_patrol.user (id, photo, name, phone, email, rating, score) VALUES (2, '/public/1b329264-75a0-413a-9d64-65c04d9b44da_photo_2020-07-08_11-30-44.jpg', 'test2', '+71231232222', 'name@mail.com', 2.1, null);
+INSERT INTO eko_patrol.user (id, photo, name, phone, email, rating, score) VALUES (3, '/public/1b329264-75a0-413a-9d64-65c04d9b44da_photo_2020-07-08_11-30-44.jpg', 'test3', '+71231232222', 'name@mail.com', 2.1, null);
