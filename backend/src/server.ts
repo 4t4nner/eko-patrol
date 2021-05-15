@@ -95,7 +95,7 @@ app.get('/location', async (req,res) => {
                 p.push(getParticipantLocation(req.query.participantId as string))
             }
             // @ts-ignore
-            if(!participantId || participantId && (req.query.length > 1)){
+            if(!participantId || participantId && (Object.keys(req.query).length > 1)){
                 p.push(getLocation(filterObj(req.query ,['org','id','status','geotag'])));
             }
             return Promise.all(p)
