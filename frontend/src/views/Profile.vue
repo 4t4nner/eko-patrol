@@ -21,7 +21,7 @@
       </div>
       <div class="exp-wrapper">
         <div class="exp-bar-wrapper">
-          <div class="exp-bar_text">3000/5000</div>
+          <div class="exp-bar_text">{{ $store.getters.profileInfo.rating }}/100</div>
           <k-progress
             :percent="30"
             :color="'#F38181'"

@@ -2,7 +2,7 @@
   <div class="header">
     <button @click="logOutHandler" class="header_btn btn">Выйти</button>
     <div v-if="isVisibleBalance" class="header-balance">
-      <div class="header-balance_value">13,07 баллов</div>
+      <div class="header-balance_value">{{ $store.getters.profileInfo.score }} баллов</div>
       <router-link to="/shop" class="header_link header-balance_link"
         >обменять
       </router-link>
