@@ -1,7 +1,14 @@
 <template>
   <div class="input" :class="{ input__small: isSmall }">
     <label class="input_label">{{ label }}</label>
-    <input :type="type" :name="name" :readonly="readOnly" class="input_item" />
+    <input
+        @keypress.enter="submitHandler"
+      v-model="localValue"
+      :type="type"
+      :name="name"
+      :readonly="readOnly"
+      class="input_item"
+    />
   </div>
 </template>
 
@@ -9,6 +16,11 @@
 export default {
   name: 'InputText',
   props: {
+    defaultValue: {
+      type: String,
+      require: false,
+      default: ''
+    },
     label: {
       type: String,
       require: true,
@@ -34,6 +46,26 @@ export default {
       require: false,
       default: false
     }
+  },
+  data() {
+    return {
+      localValue: ''
+    }
+  },
+  mounted() {
+    this.localValue = this.defaultValue
+  },
+  methods: {
+    submitHandler() {
+      if (this.$route.name === 'Registration' || this.$route.name === 'Login') {
+        this.$emit('submit')
+      }
+    }
+  },
+  watch: {
+    localValue(val) {
+      this.$emit('inputText', val)
+    }
   }
 }
 </script>
@@ -56,6 +88,9 @@ export default {
     border: 1px solid #7e7e7e;
     border-radius: 50px;
     outline: none;
+  }
+  .input_label__link {
+    text-decoration: underline;
   }
 
   &.input__small {

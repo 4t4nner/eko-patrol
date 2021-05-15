@@ -2,14 +2,14 @@
   <div class="navigation">
     <div class="navigation-wrapper">
       <div v-for="(item, idx) of navigationList" :key="`navigation-item-${idx}`" :class="{'navigation-item__active': isActiveItem(item)}" class="navigation-item" >
-        <router-link :to="item.link" class="navigation-item_link">
+        <a @click.prevent="linkHandler(item.link)" class="navigation-item_link">
           <img
             :src="require(`../assets/img/${item.icon}`)"
             alt="icon"
             class="navigation-item_icon"
           />
           <div class="navigation-item_text">{{ item.title }}</div>
-        </router-link>
+        </a>
       </div>
     </div>
     <a v-if="isVisiblePrevLink" @click="handler" class="prev-page" />
@@ -58,11 +58,19 @@ export default {
         this.$route.name === 'Search locations id' ||
         this.$route.name === 'Search reconciliation' ||
         this.$route.name === 'Search reconciliation id' ||
-        this.$route.name === 'History id'
+        this.$route.name === 'History id' ||
+        this.$route.name === 'Comments'
       )
     }
   },
   methods: {
+    linkHandler(link) {
+      if (link === '/offer') {
+        this.$router.push('/clear')
+      } else {
+        this.$router.push(link)
+      }
+    },
     isActiveItem(item) {
       return this.$store.getters.activeRootePage === item.link
     },

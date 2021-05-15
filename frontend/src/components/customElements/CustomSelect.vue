@@ -1,6 +1,6 @@
 <template>
   <div class="custom-select" @blur="open = false">
-    <div class="selected" :class="{ open: open }" @click="open = !open">
+    <div class="selected" :class="{ open: open }" @click="openSelectHandler">
       {{ selected }}
     </div>
     <div class="items" :class="{ selectHide: !open }">
@@ -44,6 +44,14 @@ export default {
   },
   mounted() {
     this.$emit('input', this.selected)
+  },
+  methods: {
+    openSelectHandler() {
+      if (this.$route.name !== 'Offer') {
+        return
+      }
+      this.open = !this.open
+    }
   }
 }
 </script>

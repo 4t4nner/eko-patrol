@@ -3,6 +3,7 @@
     <div v-for="(option, i) of options" :key="i" class="custom-radio-item">
       <input
         @change="pickedHandler(picked)"
+        :disabled="isDisableRadio"
         v-model="picked"
         :id="option.id"
         :value="option.value"
@@ -28,6 +29,11 @@ export default {
   data() {
     return {
       picked: 1
+    }
+  },
+  computed: {
+    isDisableRadio() {
+      return this.$route.name !== 'Offer' ? 'disabled' : false
     }
   },
   methods: {
