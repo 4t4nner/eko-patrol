@@ -48,6 +48,11 @@ p {
   line-height: 16px;
 }
 
+.btn__disable {
+  background: transparent;
+  border: 1px solid #232323
+}
+
 .btn__arrow {
   position: relative;
   text-align: left;
