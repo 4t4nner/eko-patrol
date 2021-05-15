@@ -41,6 +41,7 @@ export default {
 <style lang="scss" scoped>
 .location-list {
   position: relative;
+  min-height: 440px;
   height: calc(100vh - 60px);
   padding: 0 20px;
   overflow-x: hidden;

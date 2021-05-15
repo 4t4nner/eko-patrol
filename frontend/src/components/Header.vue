@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <button @click="handler" class="header_btn btn">Выйти</button>
+    <button @click="logOutHandler" class="header_btn btn">Выйти</button>
     <div v-if="isVisibleBalance" class="header-balance">
       <div class="header-balance_value">13,07 баллов</div>
       <router-link to="/shop" class="header_link header-balance_link"
@@ -25,7 +25,8 @@ export default {
     }
   },
   methods: {
-    handler() {
+    logOutHandler() {
+      this.$store.dispatch('LOGOUT')
       this.$router.push('/')
     }
   }

@@ -4,13 +4,25 @@
       <div class="card-header-img">Добавить фото</div>
       <div class="card-header-info">
         <input-text
+          :label="'Дата'"
+          :name="'data'"
+          :isSmall="true"
+          :type="'data'"
+          :readOnly="isReadOnlyRewardInput"
+        />
+        <input-text
           v-if="isVisibleOrganizedInput"
           :label="'Организатор'"
           :name="'organizer'"
           :isSmall="true"
           :readOnly="true"
         />
-        <input-text :label="'Награда'" :name="'reward'" :isSmall="true" :readOnly="isReadOnlyRewardInput"/>
+        <input-text
+          :label="'Награда'"
+          :name="'reward'"
+          :isSmall="true"
+          :readOnly="isReadOnlyRewardInput"
+        />
       </div>
     </div>
     <div class="card-body">
@@ -20,11 +32,12 @@
           {{ sliderValue + 'м' }}<sup><small>2</small></sup>
         </div>
         <range-slider
+          v-model="sliderValue"
           class="slider"
+          :disabled="isDisabledRangeSlider"
           min="10"
           max="50"
           step="1"
-          v-model="sliderValue"
         >
         </range-slider>
       </div>
@@ -36,10 +49,28 @@
         <div class="card-body-item_text">Уровень загрязнения:</div>
         <custom-radio-buttons @input="radioHandler" :options="radioOptions" />
       </div>
+      <div class="input input__small input-comment">
+        <router-link to="/comments" class="input_label input_label__link"
+          >Комментарии</router-link
+        >
+        <input
+            v-if="isVisibleCommentInput"
+          v-model="comment"
+          type="text"
+          name="comment"
+          class="input_item"
+          placeholder="Введите комментарий и нажмите Enter"
+          @keypress.enter="sendCommentHandler"
+        />
+        <div class="input-comment__send-btn"></div>
+      </div>
     </div>
     <div class="card-body-footer">
       <button class="card-body-footer_btn btn" v-if="isVisibleOfferButton">
         Предложить
+      </button>
+      <button class="card-body-footer_btn btn" v-if="isVisibleJoinButton">
+        Присоединиться
       </button>
     </div>
   </div>
@@ -92,15 +123,25 @@ export default {
           id: 'five',
           value: 5
         }
-      ]
+      ],
+      comment: ''
     }
   },
   computed: {
+    isVisibleCommentInput() {
+      return this.$route.name !== 'History id'
+    },
+    isVisibleJoinButton() {
+      return this.$route.name === 'Search locations id'
+    },
+    isDisabledRangeSlider() {
+      return this.$route.name !== 'Offer' ? 'disabled' : false
+    },
     isVisibleOfferButton() {
       return this.$route.name === 'Offer'
     },
     isVisibleOrganizedInput() {
-      return this.$route.name === 'Profile location id'
+      return this.$route.name !== 'Offer'
     },
     isReadOnlyRewardInput() {
       return this.$route.name !== 'Offer'
@@ -112,6 +153,9 @@ export default {
     },
     radioHandler(val) {
       this.radioSelect = val
+    },
+    sendCommentHandler() {
+      this.comment = ''
     }
   }
 }
@@ -179,7 +223,7 @@ export default {
     align-items: center;
   }
   .card-body-footer_btn {
-    width: 115px;
+    width: auto;
     padding: 9px 10px;
     margin-right: 20px;
 

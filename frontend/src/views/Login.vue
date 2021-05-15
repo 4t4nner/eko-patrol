@@ -1,13 +1,19 @@
 <template>
   <div class="login">
     <div class="login-logo">Logo</div>
-    <input-text :label="'Введите  логин'" :name="'login'" />
     <input-text
+      @inputText="loginHandler"
+      :label="'Введите  логин'"
+      :name="'login'"
+    />
+    <input-text
+      @submit="singinHandler"
+      @inputText="passwordHandler"
       :label="'Введите пароль'"
       :name="'password'"
       :type="'password'"
     />
-    <button @click="handler" class="btn__arrow btn">Войти</button>
+    <button @click="singinHandler" class="btn__arrow btn">Войти</button>
   </div>
 </template>
 
@@ -19,9 +25,28 @@ export default {
   components: {
     InputText
   },
+  data() {
+    return {
+      login: '',
+      password: ''
+    }
+  },
   methods: {
-    handler() {
-      this.$router.push('profile')
+    singinHandler() {
+      if (!this.login || !this.password) {
+        return
+      }
+      const payload = {
+        login: this.login,
+        password: this.password
+      }
+      this.$store.dispatch('LOGIN', payload)
+    },
+    loginHandler(val) {
+      this.login = val
+    },
+    passwordHandler(val) {
+      this.password = val
     }
   }
 }

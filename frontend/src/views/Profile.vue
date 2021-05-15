@@ -14,7 +14,6 @@
               <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon" />
               <star-icon class="info-content-starbar_icon" />
             </div>
-            <div class="info-content_rating">4.0</div>
           </div>
         </div>
       </div>
@@ -70,6 +69,7 @@ export default {
 
 <style lang="scss">
 .profile {
+  min-height: 440px;
   height: calc(100vh - 60px);
   padding: 0 20px;
   overflow-x: hidden;

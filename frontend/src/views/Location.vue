@@ -30,6 +30,7 @@ export default {
 
 <style lang="scss">
 .location {
+  min-height: 440px;
   height: calc(100vh - 60px);
   overflow-x: hidden;
   text-align: center;

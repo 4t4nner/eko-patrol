@@ -3,15 +3,23 @@
     <div class="avatar-wrapper">
       <div class="avatar_text">Выберите аватар</div>
     </div>
-    <input-text :label="'Логин'" :name="'login'" />
-    <input-text :label="'Введите телефон'" :name="'tel'" :type="'tel'" />
-    <input-text :label="'Дата рождения'" :name="'date'" :type="'date'" />
+    <input-text @inputText="loginHandler" :label="'Логин'" :name="'login'" />
     <input-text
+      @inputText="telHandler"
+      :label="'Введите телефон'"
+      :name="'tel'"
+      :type="'tel'"
+    />
+    <input-text
+      @submit="registHandler"
+      @inputText="passwordHandler"
       :label="'Задайте пароль'"
       :name="'password'"
       :type="'password'"
     />
-    <button @click="handler" class="registration_btn btn">Зарегистрироваться</button>
+    <button @click="registHandler" class="registration_btn btn">
+      Зарегистрироваться
+    </button>
   </div>
 </template>
 
@@ -23,9 +31,33 @@ export default {
   components: {
     InputText
   },
+  data() {
+    return {
+      login: '',
+      phone: '',
+      password: ''
+    }
+  },
   methods: {
-    handler() {
-      this.$router.push('profile')
+    registHandler() {
+      if (!this.login || !this.phone || !this.password) {
+        return
+      }
+      const payload = {
+        login: this.login,
+        phone: this.phone,
+        password: this.password
+      }
+      this.$store.dispatch('REGISTRATION', payload)
+    },
+    loginHandler(val) {
+      this.login = val
+    },
+    telHandler(val) {
+      this.phone = val
+    },
+    passwordHandler(val) {
+      this.password = val
     }
   }
 }
