@@ -5,13 +5,12 @@ http://192.168.88.235:8000/location/?<table_prop>
 пример:
 
 - http://192.168.88.235:8000/location/?org=1
-- `http://192.168.88.235:8000/location/?org=1&participantId=1` - participantId - зареганый на локаци пользователь
+- `http://192.168.88.235:8000/location/?org=1&participant_id=1` - participant_id - зареганый на локаци пользователь
 
 
 #####images
 get<br>
-http://192.168.88.235:8000/public/<image_name>
-- ?participantId=number -- 
+http://192.168.88.235:8000/public/<image_name> 
 
 
 
@@ -51,3 +50,8 @@ fetch('/location', {
 'photo','name','phone','email',
 'rating' = 1.4
 'score' = 5
+
+####### add participant to location
+- `/location/participant`
+- PUT !!!
+- return id of inserted row in participant table

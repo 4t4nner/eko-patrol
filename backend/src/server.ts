@@ -79,23 +79,38 @@ app.get('/location/confirmers/:locationId', (req,res) => {
     }).catch(e => handleError(e, res));
 });
 
+app.put('/location/participant',((req, res) => {
+
+    const {participant_id, location_id} = req.body;
+
+    batchInsert(
+        'participant',
+        ['user_id', 'location_id'],
+        [[participant_id, location_id]]
+    )
+        .then(ids => {
+            res.json(ids);
+        })
+        .catch(e => handleError(e, res));
+}));
+
 /**
  * Экран текущих эвентов
- * if /?participantId=number then get location where user participated
+ * if /?participant_id=number then get location where user participated
  * ?<SQL where val - like id>
- * if table_props and participantId in query - return union of selection results
+ * if table_props and participant_id in query - return union of selection results
  *
  * @return location[] with photos
  */
 app.get('/location', async (req,res) => {
     try {
-        const participantId = req.query.participantId;
+        const participant_id = req.query.participant_id;
         const locations = await ((p: Promise<any>[]) => {
-            if(participantId){
-                p.push(getParticipantLocation(req.query.participantId as string))
+            if(participant_id){
+                p.push(getParticipantLocation(req.query.participant_id as string))
             }
             // @ts-ignore
-            if(!participantId || participantId && (Object.keys(req.query).length > 1)){
+            if(!participant_id || participant_id && (Object.keys(req.query).length > 1)){
                 p.push(getLocation(filterObj(req.query ,['org','id','status','geotag'])));
             }
             return Promise.all(p)
