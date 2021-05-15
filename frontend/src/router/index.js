@@ -17,27 +17,32 @@ const routes = [
   {
     path: '/registration',
     name: 'Registration',
-    component: () => import(/* webpackChunkName: "reg" */ '../views/Registration.vue')
+    component: () => import(/* webpackChunkName: "registration" */ '../views/Registration.vue')
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import(/* webpackChunkName: "reg" */ '../views/Profile.vue')
+    component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue')
   },
   {
     path: '/search',
     name: 'Search',
-    component: () => import(/* webpackChunkName: "reg" */ '../views/Search.vue')
+    component: () => import(/* webpackChunkName: "search" */ '../views/Search.vue')
   },
   {
     path: '/search/locations',
     name: 'Locations',
-    component: () => import(/* webpackChunkName: "reg" */ '../views/Locations.vue')
+    component: () => import(/* webpackChunkName: "locations" */ '../views/Locations.vue')
   },
   {
     path: '/history',
     name: 'History',
-    component: () => import(/* webpackChunkName: "reg" */ '../views/History.vue')
+    component: () => import(/* webpackChunkName: "history" */ '../views/History.vue')
+  },
+  {
+    path: '/offer',
+    name: 'Offer',
+    component: () => import(/* webpackChunkName: "offer" */ '../views/Offer.vue')
   }
 ]
 

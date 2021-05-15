@@ -3,11 +3,11 @@
     <div class="avatar-wrapper">
       <div class="avatar_text">Выберите аватар</div>
     </div>
-    <input-text :text="'Логин'" :name="'login'" />
-    <input-text :text="'Введите телефон'" :name="'tel'" :type="'tel'" />
-    <input-text :text="'Дата рождения'" :name="'date'" :type="'date'" />
+    <input-text :label="'Логин'" :name="'login'" />
+    <input-text :label="'Введите телефон'" :name="'tel'" :type="'tel'" />
+    <input-text :label="'Дата рождения'" :name="'date'" :type="'date'" />
     <input-text
-      :text="'Задайте пароль'"
+      :label="'Задайте пароль'"
       :name="'password'"
       :type="'password'"
     />
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import InputText from '../components/InputText'
+import InputText from '../components/customElements/InputText'
 
 export default {
   name: 'Registration',

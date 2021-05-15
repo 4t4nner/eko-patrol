@@ -1,9 +1,9 @@
 <template>
   <div class="login">
     <div class="login-logo">Logo</div>
-    <input-text :text="'Введите  логин'" :name="'login'" />
+    <input-text :label="'Введите  логин'" :name="'login'" />
     <input-text
-      :text="'Введите пароль'"
+      :label="'Введите пароль'"
       :name="'password'"
       :type="'password'"
     />
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import InputText from '../components/InputText'
+import InputText from '../components/customElements/InputText'
 
 export default {
   name: 'Login',

@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Header from "../components/Header";
-import CompactEventCard from "../components/CompactEventCard";
+import Header from '../components/Header'
+import CompactEventCard from '../components/CompactEventCard'
 
 export default {
   name: 'History',
