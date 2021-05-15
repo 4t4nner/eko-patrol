@@ -17,6 +17,15 @@ export default {
     isVisibleFooterAndHeader() {
       return this.$route.name !== 'Auth' && this.$route.name !== 'Login' && this.$route.name !== 'Registration'
     }
+  },
+  created() {
+    const profileInfo = localStorage.getItem('profile-info')
+    if (profileInfo) {
+      this.$store.commit('SET_PROFILE_INFO', JSON.parse(profileInfo))
+      this.$store.commit('SET_LOGGED_IN', true)
+    } else {
+      this.$router.push('/')
+    }
   }
 }
 </script>

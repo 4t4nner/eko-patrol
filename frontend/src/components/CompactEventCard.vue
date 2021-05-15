@@ -2,9 +2,9 @@
   <div class="compact-event-card">
       <div class="card-icon"></div>
       <div class="card-content">
-        <div class="card-content_item">Имя</div>
-        <div class="card-content_item">Награда</div>
-        <div class="card-content_item">Организатор</div>
+        <div class="card-content_item">{{ locationInfo.end_date.substr(0, 10) }}</div>
+        <div class="card-content_item">{{ locationInfo.reward + 'б' }}</div>
+        <div class="card-content_item">{{ locationInfo.org.login }}</div>
         <div class="card-content_item">9/10</div>
       </div>
   </div>
@@ -12,7 +12,13 @@
 
 <script>
 export default {
-  name: 'CompactEventCard'
+  name: 'CompactEventCard',
+  props: {
+    locationInfo: {
+      type: Object,
+      require: true
+    }
+  }
 }
 </script>
 

@@ -126,7 +126,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
+    const profileInfo = localStorage.getItem('profile-info')
+    if (store.getters.isLoggedIn || profileInfo) {
       next()
       return
     }

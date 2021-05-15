@@ -24,6 +24,10 @@ export default {
     options: {
       type: Array,
       require: true
+    },
+    default: {
+      type: Number || String,
+      require: false
     }
   },
   data() {
@@ -34,6 +38,11 @@ export default {
   computed: {
     isDisableRadio() {
       return this.$route.name !== 'Offer' ? 'disabled' : false
+    }
+  },
+  mounted() {
+    if (this.default) {
+      this.picked = this.default
     }
   },
   methods: {

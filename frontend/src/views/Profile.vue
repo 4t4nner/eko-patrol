@@ -5,7 +5,9 @@
       <div class="info-inner">
         <div class="info-icon"></div>
         <div class="info-content">
-          <div class="info-content_name">Имя</div>
+          <div class="info-content_name">
+            {{ $store.getters.profileInfo.login }}
+          </div>
           <div class="info-content-rating">
             <div class="info-content-starbar">
               <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon" />
@@ -28,22 +30,70 @@
             class="progress-bar_item"
           />
         </div>
-        <div class="exp_text">04</div>
+        <div class="exp_text">{{ $store.getters.profileInfo.level }}</div>
       </div>
     </div>
     <div class="active-event-wrapper">
       <div class="active-event-header">
-        <button class="active-event-header_btn btn">Я участник</button>
-        <button class="active-event-header_btn btn">Я организатор</button>
+        <button
+          @click="changeActiveTab('participant')"
+          :class="{
+            'active-event-header_btn__active':
+              activeCurrentLocationTab === 'participant'
+          }"
+          class="active-event-header_btn btn"
+        >
+          Я участник
+        </button>
+        <button
+          @click="changeActiveTab('org')"
+          :class="{
+            'active-event-header_btn__active':
+              activeCurrentLocationTab === 'org'
+          }"
+          class="active-event-header_btn btn"
+        >
+          Я организатор
+        </button>
       </div>
       <div class="active-event-body">
-        <div class="body-title">Текущие ивенты</div>
-        <router-link to="/profile/1">
-          <compact-event-card />
-        </router-link>
-        <router-link to="/profile/2">
-          <compact-event-card />
-        </router-link>
+        <div
+          v-if="
+            participantCurrentLocation.length === 0 &&
+            orgCurrentLocation.length === 0
+          "
+          class="body-title"
+        >
+          Нет активных ивентов
+        </div>
+        <div v-else class="body-title">Текущие ивенты</div>
+        <template
+          v-if="
+            activeCurrentLocationTab === 'participant' &&
+            participantCurrentLocation.length > 0
+          "
+        >
+          <router-link
+            v-for="location of participantCurrentLocation"
+            :key="location.id"
+            :to="`/profile/${location.id}`"
+          >
+            <compact-event-card :locationInfo="location" />
+          </router-link>
+        </template>
+        <template
+          v-if="
+            activeCurrentLocationTab === 'org' && orgCurrentLocation.length > 0
+          "
+        >
+          <router-link
+            v-for="location of orgCurrentLocation"
+            :key="location.id"
+            :to="`/profile/${location.id}`"
+          >
+            <compact-event-card :locationInfo="location" />
+          </router-link>
+        </template>
       </div>
     </div>
   </div>
@@ -61,8 +111,31 @@ export default {
     StarIcon,
     CompactEventCard
   },
+  data() {
+    return {
+      activeCurrentLocationTab: 'participant'
+    }
+  },
+  computed: {
+    participantCurrentLocation() {
+      return this.$store.getters.currentLocations.filter(
+        (location) => location.org.id !== this.$store.getters.profileInfo.id
+      )
+    },
+    orgCurrentLocation() {
+      return this.$store.getters.currentLocations.filter(
+        (location) => location.org.id === this.$store.getters.profileInfo.id
+      )
+    }
+  },
   mounted() {
     this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/profile')
+    this.$store.dispatch('GET_CURRENT_LOCATIONS')
+  },
+  methods: {
+    changeActiveTab(param) {
+      this.activeCurrentLocationTab = param
+    }
   }
 }
 </script>
@@ -179,6 +252,9 @@ export default {
       height: 0.5px;
       background: #232323;
     }
+  }
+  .active-event-header_btn__active {
+    box-shadow: inset 5px 5px 10px 0px rgba(0, 0, 0, 0.75);
   }
 }
 </style>
