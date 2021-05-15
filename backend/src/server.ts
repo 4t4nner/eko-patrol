@@ -126,7 +126,8 @@ app.get('/location', async (req,res) => {
 
         const locMap = new Map(locations.map(loc => [loc.id, loc]));
         let orgs:Record<number,number> = {};
-        const locIds = locations.map(({id, org}) => {
+        const locIds = locations.map(({id, org, geotag}, i) => {
+            locations[i].geotag = JSON.parse(geotag);
             orgs[id] = org;
             return id;
         });
@@ -191,7 +192,8 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
         let location: Record<string,any> = {
             ...(id ? {} : {creation_date: formatDate()})
         };
-        ['geotag', 'org', 'status', 'reward', 'square', 'availability', 'contamination'].forEach(n => {
+        location.geotag = JSON.stringify(req.body.geotag);
+        ['org', 'status', 'reward', 'square', 'availability', 'contamination'].forEach(n => {
             location[n] = req.body[n];
         });
         ['start_date', 'end_date'].forEach(n => {

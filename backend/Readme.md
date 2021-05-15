@@ -33,7 +33,7 @@ fetch('/location', {
         status: 'start', // end or whatever
         reward: 1.4, // награда
         square: 1.4, // площадь
-        availability: 5
+        availability: 'something'
     })
 })
 
@@ -56,3 +56,4 @@ fetch('/location', {
 - `/location/participant`
 - PUT !!!
 - return id of inserted row in participant table
+- body: {participant_id, location_id}
