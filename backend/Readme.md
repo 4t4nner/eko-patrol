@@ -47,4 +47,7 @@ fetch('/location', {
 
 ####### edit user
 - post
-- `/user`
+- `/user/:id`
+'photo','name','phone','email',
+'rating' = 1.4
+'score' = 5

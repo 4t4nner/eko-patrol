@@ -8,11 +8,11 @@ import {promises as fs} from "fs";
 import * as path from "path";
 import dateformat from "dateformat";
 import {
-    batchInsert,
-    getConfirmers, getLocation,
+    batchInsert, getById,
+    getConfirmers, getEntity, getLocation,
     // getLocationById,
     getLocationPhoto,
-    getParticipantLocation, getUsers,
+    getParticipantLocation, getUserByLogin, getUsers,
     query,
     updateById
 } from "./sql"
@@ -96,10 +96,14 @@ app.get('/location', async (req,res) => {
             }
             // @ts-ignore
             if(!participantId || participantId && (req.query.length > 1)){
-                p.push(getLocation(filterObj(req.query ,['org'])));
+                p.push(getLocation(filterObj(req.query ,['org','id','status','geotag'])));
             }
             return Promise.all(p)
         })([]).then(([locs1, locs2]) => ([...(locs1 ? locs1 : []),...(locs2 ? locs2 : [])]));
+
+        if(!locations.length){
+            res.json(locations);
+        }
 
         const locMap = new Map(locations.map(loc => [loc.id, loc]));
         let orgs:Record<number,number> = {};
@@ -111,7 +115,6 @@ app.get('/location', async (req,res) => {
         const getLocationPhotoPromise = getLocationPhoto(locIds).then(tempLocPhoto => {
             tempLocPhoto.forEach(({photo, pl}) => {
                 const loc = locMap.get(pl.location_id);
-                debugger;
                 if(loc && !loc.photos){
                     // @ts-ignore
                     loc.photos = []
@@ -200,19 +203,54 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
     }
 });
 
-app.post('/user', upload.any(), (req, res) => {
 
-    let [cols, vals] = getInsParams(req.body,['photo','name','phone','email','rating','score']);
+app.get('/user',  (req, res) => {
+    const filter = req.query as Record<string,string|number>;
+    return getEntity('user', filter).then(users => {
+        res.json(filter.login ? users[0] : users);
+    });
+});
+
+app.get('/auth',  (req, res) => {
+    console.log('get /auth',JSON.stringify([req.body,req.query]));
+
+    const filter = req.query as Record<string,string|number>;
+    getEntity('user', {login: filter.login}).then(users => {
+        if(users && users[0]){
+            // @ts-ignore
+             if(users[0].password === filter.password){
+                 res.send(users[0])
+                 return;
+             } else {
+                 res.status(400).send(new Error('не верный пароль'))
+                 return;
+             }
+        } else {
+            res.status(400).send(new Error('не найден юзер'))
+            return;
+        }
+    }).catch(e => handleError(e,res));
+});
+
+
+// registration
+app.post('/user', upload.any(), (req, res) => {
+    console.log('post /user',JSON.stringify([req.body,req.query]));
+
+    let [cols, vals] = getInsParams(req.body,['login','password','photo','name','phone','email','rating','score']);
 
     if(cols.length < 2){
         res.status(400).send('wrong fields');
     }
 
-    batchInsert('user', cols, [vals]).then(id => {
-        res.send(id[0]);
-    }).catch(e => {
-        res.status(500).send(e);
-    });
+    batchInsert('user', cols, [vals])
+        .then(id => getById('user', id[0]))
+        .then(([user]) => {
+            res.send(user);
+        })
+        .catch(e => {
+            res.status(500).send(e);
+        });
 });
 
 app.post('/user/:id', upload.any(), (req, res) => {

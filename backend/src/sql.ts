@@ -33,7 +33,7 @@ export function getLocationsWithUser(userId: number|string) {
 }
 
 export function getLocation(filter:Record<string,string>): Promise<Record<string|number,string>[]>  {
-    const cond = Object.entries(filter).map(([k,v]) => `${k}=${v}`).join(' AND ');
+    const cond = Object.entries(filter).map(([k,v]) => `${k}=` + (typeof v === 'string' ? `'${v}'` : v)).join(' AND ');
     const sql = `
 SELECT * from location
 WHERE ${cond}`;
@@ -76,6 +76,17 @@ WHERE lc.location_id=${locationId}`;
         return res.map(({user}) => user);
     })
 }
+
+export function getUserByLogin(login:string) {
+    return getEntity('user', {login})
+}
+
+export function getEntity(table: string, filter: Record<string,string|number>) {
+    const condition = Object.entries(filter).map(([k,v]) => `${k}=` + (typeof v==='string' ? `'${v}'` : v)).join(',');
+    const sql = `SELECT * from ${table} WHERE ${condition}`;
+    return query(sql)
+}
+
 export function getUsers(userIds:string[]) {
     const sql = `SELECT * from user
 WHERE id IN ( ${userIds.join(',')} )`;
@@ -103,6 +114,11 @@ LEFT JOIN photo_location pl on photo.id = pl.photo_id
 WHERE pl.location_id IN (${locIds.join(',')})`;
     // @ts-ignore
     return query({sql, nestTables:true})
+}
+
+export function getById(table:string, id: number) {
+    const sql = `SELECT * from ${table} WHERE id=${id}`;
+    return query(sql)
 }
 
 export function batchInsert(table: string, columns: string[], values: (string|number)[][]) {
@@ -133,7 +149,7 @@ export function update(table: string, entity: Record<string, number|string>, whe
     return query(sQuery)
 }
 
-export function query(query: string | QueryOptions): Promise<Record<string, number|string>> {
+export function query(query: string | QueryOptions): Promise<Record<string, number|string>[]> {
     return new Promise(function (resolve, reject) {
         connection.query(query, function (error, results, fields) {
             if (error) reject(error);
