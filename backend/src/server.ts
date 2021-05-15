@@ -105,6 +105,10 @@ app.put('/location/participant',((req, res) => {
 app.get('/location', async (req,res) => {
     try {
         const participant_id = req.query.participant_id;
+        if(Object.keys(req.query).length === 0){
+            res.status(400).send('Добавьте параметры запроса');
+            return;
+        }
         const locations = await ((p: Promise<any>[]) => {
             if(participant_id){
                 p.push(getParticipantLocation(req.query.participant_id as string))
