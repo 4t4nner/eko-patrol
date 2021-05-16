@@ -54,6 +54,8 @@ export default {
 
 <style lang="scss">
 .login {
+  min-height: 650px;
+  height: 100vh;
   padding: 100px 20px 20px;
   background: url("../assets/img/login-bg.svg") top center no-repeat;
   background-size: cover;

@@ -67,6 +67,8 @@ export default {
 
 <style lang="scss">
 .registration {
+  min-height: 650px;
+  height: 100vh;
   margin: 0 auto;
   padding: 20px;
   background: url('../assets/img/registration-bg.svg') top center no-repeat;
