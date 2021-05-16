@@ -9,7 +9,7 @@ import * as path from "path";
 import dateformat from "dateformat";
 import {
     batchInsert, getById,
-    getConfirmers, getEntity, getLocation,
+    getConfirmers, getEntity, getLocation, getLocationParticipantCount,
     // getLocationById,
     getLocationPhoto,
     getParticipantLocation, getUserByLogin, getUsers,
@@ -17,6 +17,7 @@ import {
     updateById
 } from "./sql"
 import {arrayUnique, filterObj} from "./helper";
+import {addScore} from "./location";
 
 
 
@@ -104,24 +105,34 @@ app.put('/location/participant',((req, res) => {
  */
 app.get('/location', async (req,res) => {
     try {
+
+        console.log('get /location', req.query);
+
         const participant_id = req.query.participant_id;
-        if(Object.keys(req.query).length === 0){
-            res.status(400).send('Добавьте параметры запроса');
-            return;
-        }
+        // if(Object.keys(req.query).length === 0){
+        //     res.status(400).send('Добавьте параметры запроса');
+        //     return;
+        // }
         const locations = await ((p: Promise<any>[]) => {
             if(participant_id){
-                p.push(getParticipantLocation(req.query.participant_id as string))
+                p.push(getParticipantLocation(
+                    req.query.participant_id as string,
+                    filterObj(req.query ,['status'])
+                ))
             }
             // @ts-ignore
-            if(!participant_id || participant_id && (Object.keys(req.query).length > 1)){
+            if(
+                !participant_id
+                || participant_id && (Object.keys(req.query).length > 1)
+                || (Object.keys(req.query).length === 0)
+            ){
                 p.push(getLocation(filterObj(req.query ,['org','id','status','geotag'])));
             }
             return Promise.all(p)
         })([]).then(([locs1, locs2]) => ([...(locs1 ? locs1 : []),...(locs2 ? locs2 : [])]));
 
         if(!locations.length){
-            res.json(locations);
+            res.json([]);
         }
 
         const locMap = new Map(locations.map(loc => [loc.id, loc]));
@@ -130,6 +141,14 @@ app.get('/location', async (req,res) => {
             locations[i].geotag = JSON.parse(geotag);
             orgs[id] = org;
             return id;
+        });
+
+        // @ts-ignore
+        const getLocCountPromise = getLocationParticipantCount(locIds).then((resCount) => {
+            resCount.forEach(({location_id, count}) => {
+                const loc = locMap.get(location_id);
+                loc['subscribedUsers'] = `${count}/10`;
+            });
         });
 
         const getLocationPhotoPromise = getLocationPhoto(locIds).then(tempLocPhoto => {
@@ -156,7 +175,7 @@ app.get('/location', async (req,res) => {
             });
         });
 
-        Promise.all([getLocationPhotoPromise, getOrgsPromise]).then(() => {
+        Promise.all([getLocationPhotoPromise, getOrgsPromise, getLocCountPromise]).then(() => {
             res.json(locations);
         });
 
@@ -174,7 +193,7 @@ app.get('/location', async (req,res) => {
  org = "1"
  reward = "2.4"
  start_date = "2021-05-15T00:56"
- status = "test"
+ status = "prepare"
  */
 app.post('/location/:id?', upload.any(), async (req, res) => {
     try {
@@ -182,11 +201,19 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
         let files:Express.Multer.File[] = req.files as Express.Multer.File[];
         const confirmers = req.body.confirmers;
         const participants = req.body.participants;
-        const id = req.params.id;
+        const id = req.params.id && Number(req.params.id);
 
-        let photoIds:number[];
-        if(files){
-            photoIds = await saveLocPhotos(files);
+        let photoIds:number[],
+            oldLocation: Record<string,string|number>|undefined = undefined;
+        {
+            const promises = [];
+            id && promises.push(getLocation({id}).then(locations => {
+                oldLocation = locations[0];
+            }));
+            files && promises.push(saveLocPhotos(files).then(ids => {
+                photoIds = ids;
+            }));
+            await Promise.all(promises);
         }
         debugger;
         let location: Record<string,any> = {
@@ -210,10 +237,33 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
         debugger;
         const locId = Number(id || addedLocation);
 
-        let [addedConfirmers, addedParticipants] = await Promise.all([
-            ...(confirmers ? [saveConfirmers(locId, confirmers)] : []),
-            ...(participants ? [batchInsert('participant', ['location_id','user_id'], participants.map((pId: number) => [locId, pId]))] : []),
-        ]);
+        let addedConfirmers, addedParticipants;
+        await Promise.all((promises => {
+                confirmers && promises.push(
+                    saveConfirmers(locId, confirmers).then(confirmers => {
+                        addedConfirmers = confirmers;
+                    }));
+
+                participants && promises.push(batchInsert(
+                    'participant',
+                    ['location_id', 'user_id'],
+                    participants.map((pId: number) => [locId, pId])
+                    )
+                        .then(p => {
+                            addedParticipants = p;
+                        })
+                );
+                
+                id
+                && oldLocation
+                && location.status === 'finish'
+                    // @ts-ignore
+                && oldLocation.status !== location.status
+                && promises.push(addScore(oldLocation));
+
+                return promises;
+            })([] as Promise<any>[])
+        );
 
         res.json({
             addedLocation,
@@ -227,11 +277,13 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
     }
 });
 
-
+/**
+ * /user?id=1
+ */
 app.get('/user',  (req, res) => {
     const filter = req.query as Record<string,string|number>;
     return getEntity('user', filter).then(users => {
-        res.json(filter.login ? users[0] : users);
+        res.json((filter.login || filter.id) ? users[0] : users);
     });
 });
 

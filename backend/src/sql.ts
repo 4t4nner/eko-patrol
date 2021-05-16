@@ -32,11 +32,11 @@ export function getLocationsWithUser(userId: number|string) {
 
 }
 
-export function getLocation(filter:Record<string,string>): Promise<Record<string|number,string>[]>  {
+export function getLocation(filter:Record<string,string|number>): Promise<Record<string|number,string>[]>  {
     const cond = Object.entries(filter).map(([k,v]) => `${k}=` + (typeof v === 'string' ? `'${v}'` : v)).join(' AND ');
     const sql = `
 SELECT * from location
-WHERE ${cond}`;
+` + (cond ? `WHERE ${cond}` : '');
     // @ts-ignore
     return query(sql);
 }
@@ -81,8 +81,23 @@ export function getUserByLogin(login:string) {
     return getEntity('user', {login})
 }
 
-export function getEntity(table: string, filter: Record<string,string|number>) {
-    const condition = Object.entries(filter).map(([k,v]) => `${k}=` + (typeof v==='string' ? `'${v}'` : v)).join(',');
+type GetEntityFilter = Record<string, (string|number) | (string|number)[]>
+
+export function getEntity(table: string, filter: GetEntityFilter) {
+    const condition = Object.entries(filter).map(([k,v]) => {
+        switch (typeof v) {
+            case 'string': return `${k}='${v}'`;
+            case 'number': return `${k}=${v}`;
+            case 'object': {
+                if(Array.isArray(v)){
+                    return `${k} IN (${(v as Array<any>).map(
+                        s => typeof s === 'string' ?`'${s}'` : s
+                    ).join(',')})`
+                }
+            }
+            default: throw new Error(`getEntity: unknown type of "${JSON.stringify(v)}"`)
+        }
+    }).join(',');
     const sql = `SELECT * from ${table} WHERE ${condition}`;
     return query(sql)
 }
@@ -97,10 +112,45 @@ WHERE id IN ( ${userIds.join(',')} )`;
     })
 }
 
-export function getParticipantLocation(userId:string): Promise<Record<string,string>[]> {
+/**
+ *
+ INSERT into `user` (id, score)
+ VALUES (1, 1.5), (2, 3), (3, 5)
+ ON DUPLICATE KEY UPDATE score = VALUES(score);
+ * @param table
+ * @param cols: ['id', ...string[]]
+ * @param values
+ */
+export function multUpdate(table: string, cols: string[], values: (string|number)[][]) {
+    const sCols = values.map(v => `(${v.join(',')})`).join(',');
+    const upCols = cols.slice(1);
+    const sUpCols = upCols.map(col => `${col} = VALUES(${col})`).join(',');
+    const sql = `
+INSERT into ${table} (${cols.join(',')})
+VALUES ${sCols}
+ON DUPLICATE KEY UPDATE ${sUpCols}`;
+    return query(sql);
+}
+
+export function getLocationParticipantCount(locIds:number[]) {
+    const sql = `SELECT COUNT(*) as count,location_id
+from participant
+WHERE location_id IN (${locIds.join(',')})
+GROUP BY location_id`;
+    return query(sql)
+}
+
+export function getLocationParticipants(locationId: number) {
+    const sql = `SELECT user_id FROM participant WHERE location_id=${locationId}`;
+    return query(sql).then(ps => ps.map(({user_id}) => user_id))
+}
+
+
+export function getParticipantLocation(userId:string, filter:Record<string,string>): Promise<Record<string,string>[]> {
+    const cond = Object.entries(filter).map(([k,v]) => `${k}=` + (typeof v === 'string' ? `'${v}'` : v)).join(' AND ');
     const sql = `SELECT * from location
 LEFT JOIN participant p on location.id = p.location_id
-WHERE p.user_id=${userId}`;
+WHERE p.user_id=${userId}` + (cond ? ` AND ${cond}` : '');
     // @ts-ignore
     return query({sql, nestTables:true}).then(
         // @ts-ignore
@@ -142,7 +192,9 @@ export function updateById(table: string, entity: Record<string, number|string>,
 }
 
 export function update(table: string, entity: Record<string, number|string>, where:string) {
-    const set = Object.entries(entity).map(([col,v]) => `${col} = ${v}`).join(' ,');
+    const set = Object.entries(entity).map(([col,v]) =>
+        `${col} = ` +  (typeof v === 'string' ? `'${v}'` : v)
+    ).join(' ,');
     const sQuery = `UPDATE ${table}
     SET ${set}
     WHERE ${where};`;

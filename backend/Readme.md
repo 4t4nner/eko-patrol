@@ -1,12 +1,17 @@
-##### Экран текущих эвентов
+##### Экран текущих эвентов, получение локации
 http://192.168.88.235:8000/location/?<table_prop>
 - table_prop = id, geotag, creation_date, start_date, end_date, org, status, reward, square, availability
 
 пример:
 
 - http://192.168.88.235:8000/location/?org=1
-- `http://192.168.88.235:8000/location/?org=1&participant_id=1` - participant_id - зареганый на локаци пользователь
+- `http://192.168.88.235:8000/location/?org=1&participant_id=1` - participant_id - зареганый на локацию пользователь
 
+<b>status of location</b>
+- prepare
+- active
+- finish
+- history
 
 #####images
 get<br>
@@ -39,6 +44,10 @@ fetch('/location', {
 
 ```
 
+
+####### add user
+- get
+- `/user`
 
 ####### add user
 - post
