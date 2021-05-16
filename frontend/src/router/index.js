@@ -13,17 +13,20 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue')
+    component: () =>
+      import(/* webpackChunkName: "login" */ '../views/Login.vue')
   },
   {
     path: '/registration',
     name: 'Registration',
-    component: () => import(/* webpackChunkName: "registration" */ '../views/Registration.vue')
+    component: () =>
+      import(/* webpackChunkName: "registration" */ '../views/Registration.vue')
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
+    component: () =>
+      import(/* webpackChunkName: "profile" */ '../views/Profile.vue'),
     meta: {
       requiresAuth: true
     }
@@ -31,7 +34,10 @@ const routes = [
   {
     path: '/profile/:locationId',
     name: 'Profile location id',
-    component: () => import(/* webpackChunkName: "profile location id" */ '../views/Location.vue'),
+    component: () =>
+      import(
+        /* webpackChunkName: "profile location id" */ '../views/Location.vue'
+      ),
     meta: {
       requiresAuth: true
     }
@@ -39,7 +45,8 @@ const routes = [
   {
     path: '/search',
     name: 'Search',
-    component: () => import(/* webpackChunkName: "search" */ '../views/Search.vue'),
+    component: () =>
+      import(/* webpackChunkName: "search" */ '../views/Search.vue'),
     meta: {
       requiresAuth: true
     }
@@ -47,7 +54,10 @@ const routes = [
   {
     path: '/search/locations',
     name: 'Search locations',
-    component: () => import(/* webpackChunkName: "search locations" */ '../views/LocationList.vue'),
+    component: () =>
+      import(
+        /* webpackChunkName: "search locations" */ '../views/LocationList.vue'
+      ),
     meta: {
       requiresAuth: true
     }
@@ -55,7 +65,32 @@ const routes = [
   {
     path: '/search/locations/:locationId',
     name: 'Search locations id',
-    component: () => import(/* webpackChunkName: "search locations id" */ '../views/Location.vue'),
+    component: () =>
+      import(
+        /* webpackChunkName: "search locations id" */ '../views/Location.vue'
+      ),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/search/appraisal',
+    name: 'Search appraisal',
+    component: () =>
+      import(
+        /* webpackChunkName: "search appraisal" */ '../views/LocationList.vue'
+      ),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/search/appraisal/:locationId',
+    name: 'Search appraisal id',
+    component: () =>
+      import(
+        /* webpackChunkName: "search appraisal id" */ '../views/Location.vue'
+      ),
     meta: {
       requiresAuth: true
     }
@@ -63,7 +98,10 @@ const routes = [
   {
     path: '/search/reconciliation',
     name: 'Search reconciliation',
-    component: () => import(/* webpackChunkName: "search reconciliation" */ '../views/LocationList.vue'),
+    component: () =>
+      import(
+        /* webpackChunkName: "search reconciliation" */ '../views/LocationList.vue'
+      ),
     meta: {
       requiresAuth: true
     }
@@ -71,7 +109,10 @@ const routes = [
   {
     path: '/search/reconciliation/:locationId',
     name: 'Search reconciliation id',
-    component: () => import(/* webpackChunkName: "search reconciliation id" */ '../views/Location.vue'),
+    component: () =>
+      import(
+        /* webpackChunkName: "search reconciliation id" */ '../views/Location.vue'
+      ),
     meta: {
       requiresAuth: true
     }
@@ -79,7 +120,8 @@ const routes = [
   {
     path: '/history',
     name: 'History',
-    component: () => import(/* webpackChunkName: "history" */ '../views/LocationList.vue'),
+    component: () =>
+      import(/* webpackChunkName: "history" */ '../views/LocationList.vue'),
     meta: {
       requiresAuth: true
     }
@@ -87,7 +129,8 @@ const routes = [
   {
     path: '/history/:locationId',
     name: 'History id',
-    component: () => import(/* webpackChunkName: "history id" */ '../views/Location.vue'),
+    component: () =>
+      import(/* webpackChunkName: "history id" */ '../views/Location.vue'),
     meta: {
       requiresAuth: true
     }
@@ -95,7 +138,8 @@ const routes = [
   {
     path: '/offer',
     name: 'Offer',
-    component: () => import(/* webpackChunkName: "offer" */ '../views/Location.vue'),
+    component: () =>
+      import(/* webpackChunkName: "offer" */ '../views/Location.vue'),
     meta: {
       requiresAuth: true
     }
@@ -103,7 +147,8 @@ const routes = [
   {
     path: '/comments',
     name: 'Comments',
-    component: () => import(/* webpackChunkName: "comments" */ '../views/Comments.vue'),
+    component: () =>
+      import(/* webpackChunkName: "comments" */ '../views/Comments.vue'),
     meta: {
       requiresAuth: true
     }
@@ -111,7 +156,17 @@ const routes = [
   {
     path: '/clear',
     name: 'Clear',
-    component: () => import(/* webpackChunkName: "comments" */ '../views/Clear.vue'),
+    component: () =>
+      import(/* webpackChunkName: "comments" */ '../views/Clear.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/shop',
+    name: 'Shop',
+    component: () =>
+      import(/* webpackChunkName: "comments" */ '../views/Shop.vue'),
     meta: {
       requiresAuth: true
     }
@@ -125,8 +180,9 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const profileInfo = localStorage.getItem('profile-info')
+    if (store.getters.isLoggedIn || profileInfo) {
       next()
       return
     }

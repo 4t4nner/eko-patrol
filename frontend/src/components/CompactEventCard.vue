@@ -1,10 +1,10 @@
 <template>
   <div class="compact-event-card">
-      <div class="card-icon"></div>
+      <img class="card-icon" src="../assets/img/location-icon.png" alt="location icon">
       <div class="card-content">
-        <div class="card-content_item">Имя</div>
-        <div class="card-content_item">Награда</div>
-        <div class="card-content_item">Организатор</div>
+        <div class="card-content_item">{{ locationInfo.end_date.substr(0, 10) }}</div>
+        <div class="card-content_item">{{ locationInfo.reward + 'б' }}</div>
+        <div class="card-content_item">{{ locationInfo.org.login }}</div>
         <div class="card-content_item">9/10</div>
       </div>
   </div>
@@ -12,7 +12,13 @@
 
 <script>
 export default {
-  name: 'CompactEventCard'
+  name: 'CompactEventCard',
+  props: {
+    locationInfo: {
+      type: Object,
+      require: true
+    }
+  }
 }
 </script>
 
@@ -24,11 +30,7 @@ export default {
   padding-top: 25px;
 
   .card-icon {
-    width: 100px;
-    height: 100px;
     margin-right: 20px;
-    border-radius: 50%;
-    background: #c4c4c4;
   }
   .card-content {
     text-align: left;

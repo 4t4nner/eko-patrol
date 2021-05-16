@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <div class="login-logo">Logo</div>
+    <img class="login-logo" src="../assets/img/login-logo.png" alt="login logo">
     <input-text
       @inputText="loginHandler"
       :label="'Введите  логин'"
@@ -55,17 +55,12 @@ export default {
 <style lang="scss">
 .login {
   padding: 100px 20px 20px;
+  background: url("../assets/img/login-bg.svg") top center no-repeat;
+  background-size: cover;
   text-align: center;
 
   .login-logo {
     margin: 0 auto 50px;
-    width: 200px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #c4c4c4;
-    border-radius: 50%;
   }
 }
 </style>

@@ -3,9 +3,11 @@
     <Header />
     <div class="info-wrapper">
       <div class="info-inner">
-        <div class="info-icon"></div>
+        <img class="info-icon" src="../assets/img/user-icon.png" alt="user icon">
         <div class="info-content">
-          <div class="info-content_name">Имя</div>
+          <div class="info-content_name">
+            {{ $store.getters.profileInfo.login }}
+          </div>
           <div class="info-content-rating">
             <div class="info-content-starbar">
               <star-icon :fill="'#FCE38A'" class="info-content-starbar_icon" />
@@ -19,31 +21,81 @@
       </div>
       <div class="exp-wrapper">
         <div class="exp-bar-wrapper">
-          <div class="exp-bar_text">3000/5000</div>
+          <div class="exp-bar_text">
+            {{ $store.getters.profileInfo.rating }}/100
+          </div>
           <k-progress
-            :percent="30"
+            :percent="$store.getters.profileInfo.rating"
             :color="'#F38181'"
             :bg-color="'#FCE38A'"
             :show-text="false"
             class="progress-bar_item"
           />
         </div>
-        <div class="exp_text">04</div>
+        <div class="exp_text">{{ $store.getters.profileInfo.level }}</div>
       </div>
     </div>
     <div class="active-event-wrapper">
       <div class="active-event-header">
-        <button class="active-event-header_btn btn">Я участник</button>
-        <button class="active-event-header_btn btn">Я организатор</button>
+        <button
+          @click="changeActiveTab('participant')"
+          :class="{
+            'active-event-header_btn__active':
+              activeCurrentLocationTab === 'participant'
+          }"
+          class="active-event-header_btn btn"
+        >
+          Я участник
+        </button>
+        <button
+          @click="changeActiveTab('org')"
+          :class="{
+            'active-event-header_btn__active':
+              activeCurrentLocationTab === 'org'
+          }"
+          class="active-event-header_btn btn"
+        >
+          Я организатор
+        </button>
       </div>
       <div class="active-event-body">
-        <div class="body-title">Текущие ивенты</div>
-        <router-link to="/profile/1">
-          <compact-event-card />
-        </router-link>
-        <router-link to="/profile/2">
-          <compact-event-card />
-        </router-link>
+        <div
+          v-if="
+            participantCurrentLocation.length === 0 &&
+            orgCurrentLocation.length === 0
+          "
+          class="body-title"
+        >
+          Нет активных ивентов
+        </div>
+        <div v-else class="body-title">Текущие ивенты</div>
+        <template
+          v-if="
+            activeCurrentLocationTab === 'participant' &&
+            participantCurrentLocation.length > 0
+          "
+        >
+          <router-link
+            v-for="location of participantCurrentLocation"
+            :key="location.id"
+            :to="`/profile/${location.id}`"
+          >
+            <compact-event-card :locationInfo="location" />
+          </router-link>
+        </template>
+        <template
+          v-if="
+            activeCurrentLocationTab === 'org' && orgCurrentLocation.length > 0
+          "
+        >
+          <router-link
+            v-for="location of orgCurrentLocation"
+            :key="location.id"
+            :to="`/profile/${location.id}`"
+          >
+            <compact-event-card :locationInfo="location" />
+          </router-link>
+        </template>
       </div>
     </div>
   </div>
@@ -61,8 +113,34 @@ export default {
     StarIcon,
     CompactEventCard
   },
+  data() {
+    return {
+      activeCurrentLocationTab: 'participant'
+    }
+  },
+  computed: {
+    participantCurrentLocation() {
+      return this.$store.getters.currentLocations.filter(
+        (location) => location.org.id !== this.$store.getters.profileInfo.id
+      )
+    },
+    orgCurrentLocation() {
+      return this.$store.getters.currentLocations.filter(
+        (location) => location.org.id === this.$store.getters.profileInfo.id
+      )
+    }
+  },
+  async created() {
+    await this.$store.dispatch('GET_LOCATIONS')
+    await this.$store.dispatch('UPDATE_USER_INFO')
+  },
   mounted() {
     this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/profile')
+  },
+  methods: {
+    changeActiveTab(param) {
+      this.activeCurrentLocationTab = param
+    }
   }
 }
 </script>
@@ -72,6 +150,8 @@ export default {
   min-height: 440px;
   height: calc(100vh - 60px);
   padding: 0 20px;
+  background: url('../assets/img/registration-bg.svg') top center no-repeat;
+  background-size: cover;
   overflow-x: hidden;
   text-align: center;
 
@@ -82,10 +162,7 @@ export default {
   }
   .info-icon {
     width: 100px;
-    height: 100px;
     margin-right: 20px;
-    border-radius: 50%;
-    background: #c4c4c4;
   }
   .info-content_name {
     font-size: 18px;
@@ -145,9 +222,9 @@ export default {
     margin-bottom: 45px;
   }
   .active-event-header_btn {
-    width: 135px;
     padding: 10px 15px;
     margin-right: 35px;
+    white-space: nowrap;
 
     &:last-child {
       margin-right: 0;
@@ -179,6 +256,9 @@ export default {
       height: 0.5px;
       background: #232323;
     }
+  }
+  .active-event-header_btn__active {
+    background: #FFCF25;
   }
 }
 </style>

@@ -72,12 +72,13 @@ export default {
 
 <style lang="scss">
 .input {
-  margin-bottom: 20px;
+  max-width: 300px;
   text-align: left;
+  margin: 0 auto 20px;
 
   .input_label {
     display: block;
-    padding-left: 10px;
+    padding-left: 20px;
     margin-bottom: 5px;
     font-size: 12px;
     line-height: 14px;
@@ -85,7 +86,7 @@ export default {
   .input_item {
     width: 100%;
     padding: 15px 30px;
-    border: 1px solid #7e7e7e;
+    border: 1px solid #232323;
     border-radius: 50px;
     outline: none;
   }

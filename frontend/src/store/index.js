@@ -8,17 +8,34 @@ export default new Vuex.Store({
   state: {
     activeRootePage: '',
     isLoggedIn: false,
-    profileInfo: {}
+    profileInfo: {},
+    activeLocationInfo: {},
+    currentLocations: []
   },
   getters: {
+    currentLocations(state) {
+      return state.currentLocations
+    },
+    activeLocationInfo(state) {
+      return state.activeLocationInfo
+    },
     activeRootePage(state) {
       return state.activeRootePage
     },
     isLoggedIn(state) {
       return state.isLoggedIn
+    },
+    profileInfo(state) {
+      return state.profileInfo
     }
   },
   mutations: {
+    SET_CURRENT_LOCATIONS(state, data) {
+      state.currentLocations = data
+    },
+    SET_LOCATION_INFO(state, data) {
+      state.activeLocationInfo = data
+    },
     SET_ACTIVE_ROOTE_PAGE(state, data) {
       state.activeRootePage = data
     },
@@ -30,6 +47,56 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    UPDATE_USER_INFO(context) {
+      fetch(
+        `http://192.168.88.235:8000/user?id=${context.state.profileInfo.id}`
+      )
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          if (data) {
+            context.commit('SET_PROFILE_INFO', data)
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    },
+    GET_LOCATIONS(context) {
+      fetch('http://192.168.88.235:8000/location')
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          if (data) {
+            context.commit('SET_CURRENT_LOCATIONS', data)
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    },
+    ADD_LOCATION(context, data) {
+      fetch('http://192.168.88.235:8000/location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          if (data) {
+            router.push('/clear')
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    },
     REGISTRATION(context, data) {
       fetch('http://192.168.88.235:8000/user', {
         method: 'POST',
@@ -45,6 +112,7 @@ export default new Vuex.Store({
           if (data) {
             context.commit('SET_PROFILE_INFO', data)
             context.commit('SET_LOGGED_IN', true)
+            localStorage.setItem('profile-info', JSON.stringify(data))
             router.push('/profile')
           }
         })
@@ -53,7 +121,9 @@ export default new Vuex.Store({
         })
     },
     LOGIN(context, data) {
-      fetch(`http://192.168.88.235:8000/auth?login=${data.login}&password=${data.password}`)
+      fetch(
+        `http://192.168.88.235:8000/auth?login=${data.login}&password=${data.password}`
+      )
         .then((response) => {
           return response.json()
         })
@@ -61,6 +131,7 @@ export default new Vuex.Store({
           if (data) {
             context.commit('SET_PROFILE_INFO', data)
             context.commit('SET_LOGGED_IN', true)
+            localStorage.setItem('profile-info', JSON.stringify(data))
             router.push('/profile')
           }
         })
@@ -71,6 +142,7 @@ export default new Vuex.Store({
     LOGOUT(context) {
       context.commit('SET_LOGGED_IN', false)
       context.commit('SET_PROFILE_INFO', {})
+      localStorage.removeItem('profile-info')
       router.push('/')
     }
   }
