@@ -217,6 +217,11 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
         const participants = req.body.participants;
         const id = req.params.id && Number(req.params.id);
 
+        console.log('post /location/'+ id, JSON.stringify(req.body));
+        if(!id && !req.body.org){
+            res.status(400).send('не отправлен организатор');
+        }
+
         let photoIds:number[],
             oldLocation: Record<string,string|number>|undefined = undefined;
         {
@@ -229,7 +234,6 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
             }));
             await Promise.all(promises);
         }
-        debugger;
         let location: Record<string,any> = {
             ...(id ? {} : {creation_date: formatDate()})
         };
@@ -250,7 +254,6 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
             addedLocation = (await batchInsert('location', Object.keys(location), [Object.values(location)]))[0];
         }
 
-        debugger;
         const locId = Number(id || addedLocation);
 
         let addedConfirmers, addedParticipants;
@@ -272,7 +275,7 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
                 
                 id
                 && oldLocation
-                && location.status === 'finish'
+                && location.status === 'history'
                     // @ts-ignore
                 && oldLocation.status !== location.status
                 && promises.push(addScore(oldLocation));
@@ -378,7 +381,6 @@ async function saveLocPhotos(files: Express.Multer.File[]) {
             return [`/public/${originalname}`, type]
         })
     );
-    debugger;
     return res;
 }
 

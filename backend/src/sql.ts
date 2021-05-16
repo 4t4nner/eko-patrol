@@ -109,6 +109,9 @@ WHERE id IN ( ${userIds.join(',')} )`;
         // @ts-ignore
         (res:Record<string,string>[]) => {
         return res.map(({user}) => user);
+    }).catch(e => {
+        console.log('getUsers: ', JSON.stringify(userIds));
+        throw e;
     })
 }
 
@@ -166,7 +169,7 @@ WHERE participant.location_id IN (${locationIds})`;
                 // @ts-ignore
                 u.locations = new Set([location_id]);
             } else {
-                mapUser.locations.set(location_id)
+                mapUser.locations.add(location_id)
             }
         });
         users.forEach(u => {
