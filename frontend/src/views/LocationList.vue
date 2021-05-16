@@ -46,6 +46,9 @@ export default {
       })
     }
   },
+  async created() {
+    await this.$store.dispatch('GET_LOCATIONS')
+  },
   mounted() {
     if (this.$route.name === 'History') {
       this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/history')
@@ -59,12 +62,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .location-list {
   position: relative;
   min-height: 440px;
   height: calc(100vh - 60px);
   padding: 0 20px;
+  background: url("../assets/img/shop-bg.svg") top center no-repeat;
+  background-size: cover;
   overflow-x: hidden;
   text-align: center;
 

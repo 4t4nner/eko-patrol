@@ -3,7 +3,7 @@
     <Header />
     <div class="info-wrapper">
       <div class="info-inner">
-        <div class="info-icon"></div>
+        <img class="info-icon" src="../assets/img/user-icon.png" alt="user icon">
         <div class="info-content">
           <div class="info-content_name">
             {{ $store.getters.profileInfo.login }}
@@ -25,7 +25,7 @@
             {{ $store.getters.profileInfo.rating }}/100
           </div>
           <k-progress
-            :percent="30"
+            :percent="$store.getters.profileInfo.rating"
             :color="'#F38181'"
             :bg-color="'#FCE38A'"
             :show-text="false"
@@ -131,6 +131,7 @@ export default {
     }
   },
   async created() {
+    await this.$store.dispatch('GET_LOCATIONS')
     await this.$store.dispatch('UPDATE_USER_INFO')
   },
   mounted() {
@@ -149,6 +150,8 @@ export default {
   min-height: 440px;
   height: calc(100vh - 60px);
   padding: 0 20px;
+  background: url('../assets/img/registration-bg.svg') top center no-repeat;
+  background-size: cover;
   overflow-x: hidden;
   text-align: center;
 
@@ -159,10 +162,7 @@ export default {
   }
   .info-icon {
     width: 100px;
-    height: 100px;
     margin-right: 20px;
-    border-radius: 50%;
-    background: #c4c4c4;
   }
   .info-content_name {
     font-size: 18px;
@@ -222,9 +222,9 @@ export default {
     margin-bottom: 45px;
   }
   .active-event-header_btn {
-    width: 135px;
     padding: 10px 15px;
     margin-right: 35px;
+    white-space: nowrap;
 
     &:last-child {
       margin-right: 0;
@@ -258,7 +258,7 @@ export default {
     }
   }
   .active-event-header_btn__active {
-    box-shadow: inset 5px 5px 10px 0px rgba(0, 0, 0, 0.75);
+    background: #FFCF25;
   }
 }
 </style>

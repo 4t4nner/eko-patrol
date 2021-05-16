@@ -100,6 +100,8 @@ export default {
 .location {
   min-height: 440px;
   height: calc(100vh - 60px);
+  background: url("../assets/img/offer-bg.svg") top center no-repeat;
+  background-size: cover;
   overflow-x: hidden;
   text-align: center;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="event-card">
     <div class="card-header">
-      <div class="card-header-img">Добавить фото</div>
+      <img class="card-header-img" src="../assets/img/location-icon2.png" alt="location icon">
       <div class="card-header-info">
         <input-text
           @inputText="inputDateHandler"
@@ -194,6 +194,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../assets/styles/variables';
+
 .event-card {
   padding: 15px 20px;
 
@@ -262,6 +264,53 @@ export default {
     &:last-child {
       margin-right: 0;
     }
+  }
+  .range-slider-knob {
+    background-color: $yellow;
+  }
+  .range-slider-rail {
+    background-color: $red;
+  }
+  .custom-radio-item {
+    margin-bottom: 10px;
+  }
+  .custom-radio-item input[type=radio] {
+    display: none;
+  }
+  .custom-radio-item label {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 5px;
+    margin-right: 0;
+    padding-top: 15px;
+    line-height: 18px;
+    user-select: none;
+  }
+  .custom-radio-item label:before {
+    content: "";
+    display: inline-block;
+    width: 17px;
+    height: 18px;
+    position: absolute;
+    left: 0;
+    top: 1px;
+    background: url('../assets/img/radio2.png') 0 0 no-repeat;
+  }
+
+  /* Checked */
+  .custom-radio-item input[type=radio]:checked + label:before {
+    background: url('../assets/img/radio1.png') 0 0 no-repeat;
+  }
+
+  /* Hover */
+  .custom-radio-item label:hover:before {
+    filter: brightness(120%);
+  }
+
+  /* Disabled */
+  .custom-radio-item input[type=radio]:disabled + label:before {
+    filter: grayscale(100%);
   }
 }
 </style>

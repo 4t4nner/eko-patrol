@@ -1,8 +1,10 @@
 <template>
   <div class="registration">
-    <div class="avatar-wrapper">
-      <div class="avatar_text">Выберите аватар</div>
-    </div>
+    <img
+      class="avatar-wrapper"
+      src="../assets/img/user-icon.png"
+      alt="user icon"
+    />
     <input-text @inputText="loginHandler" :label="'Логин'" :name="'login'" />
     <input-text
       @inputText="telHandler"
@@ -66,18 +68,13 @@ export default {
 <style lang="scss">
 .registration {
   margin: 0 auto;
-  text-align: center;
   padding: 20px;
+  background: url('../assets/img/registration-bg.svg') top center no-repeat;
+  background-size: cover;
+  text-align: center;
 
   .avatar-wrapper {
     margin: 0 auto 10px;
-    width: 200px;
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #c4c4c4;
-    border-radius: 50%;
-  }
+    }
 }
 </style>

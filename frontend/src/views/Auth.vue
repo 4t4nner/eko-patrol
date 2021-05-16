@@ -1,14 +1,12 @@
 <template>
   <div class="auth">
     <div class="welcome-wrapper">
-      <div class="welcome-logo">Logo</div>
+      <img class="welcome-logo" src="../assets/img/auth-logo.png" alt="logo" />
       <div class="welcome-text">Добро пожаловать</div>
     </div>
     <div class="auth-footer">
       <div class="footer-login">
-        <router-link class="btn__arrow btn" to="/login">
-          Войти
-        </router-link>
+        <router-link class="btn__arrow btn" to="/login"> Войти </router-link>
       </div>
       <div class="footer-reg">
         Нет аккаунта?
@@ -28,11 +26,16 @@ export default {
 
 <style lang="scss">
 .auth {
-  position: relative;
+  min-height: 500px;
   height: 100vh;
   padding-top: 100px;
+  background: url("../assets/img/auth-bg.svg") top center no-repeat;
+  background-size: cover;
   text-align: center;
 
+  .welcome-wrapper {
+    margin-bottom: 50px;
+  }
   .welcome-logo {
     width: 200px;
     height: 200px;
@@ -45,16 +48,12 @@ export default {
     line-height: 28px;
   }
   .auth-footer {
-    position: absolute;
-    left: 50%;
-    bottom: 50px;
-    transform: translateX(-50%);
     width: 100%;
     font-size: 14px;
     line-height: 16px;
   }
   .footer-login {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
   .footer-reg_link {
     text-decoration: underline;

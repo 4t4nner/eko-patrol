@@ -1,6 +1,6 @@
 <template>
   <div class="compact-event-card">
-      <div class="card-icon"></div>
+      <img class="card-icon" src="../assets/img/location-icon.png" alt="location icon">
       <div class="card-content">
         <div class="card-content_item">{{ locationInfo.end_date.substr(0, 10) }}</div>
         <div class="card-content_item">{{ locationInfo.reward + 'б' }}</div>
@@ -30,11 +30,7 @@ export default {
   padding-top: 25px;
 
   .card-icon {
-    width: 100px;
-    height: 100px;
     margin-right: 20px;
-    border-radius: 50%;
-    background: #c4c4c4;
   }
   .card-content {
     text-align: left;

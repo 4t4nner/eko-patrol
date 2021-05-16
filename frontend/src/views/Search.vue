@@ -61,6 +61,8 @@ export default {
   min-height: 440px;
   height: calc(100vh - 60px);
   padding: 0 20px;
+  background: url("../assets/img/auth-bg.svg") top center no-repeat;
+  background-size: cover;
   overflow-x: hidden;
   text-align: center;
 
