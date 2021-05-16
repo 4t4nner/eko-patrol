@@ -1,7 +1,11 @@
 <template>
   <div class="event-card">
     <div class="card-header">
-      <img class="card-header-img" src="../assets/img/location-icon2.png" alt="location icon">
+      <img
+        class="card-header-img"
+        src="../assets/img/location-icon2.png"
+        alt="location icon"
+      />
       <div class="card-header-info">
         <input-text
           @inputText="inputDateHandler"
@@ -10,7 +14,11 @@
           :isSmall="true"
           :type="'date'"
           :readOnly="isReadOnlyRewardInput"
-          :defaultValue="Object.keys(this.$store.getters.activeLocationInfo).length > 0 ? $store.getters.activeLocationInfo.end_date.substr(0, 10) : ''"
+          :defaultValue="
+            Object.keys(this.$store.getters.activeLocationInfo).length > 0
+              ? $store.getters.activeLocationInfo.end_date.substr(0, 10)
+              : ''
+          "
         />
         <input-text
           v-if="isVisibleOrganizedInput"
@@ -19,7 +27,11 @@
           :name="'organizer'"
           :isSmall="true"
           :readOnly="true"
-          :defaultValue="Object.keys(this.$store.getters.activeLocationInfo).length > 0 ? $store.getters.activeLocationInfo.org.login : ''"
+          :defaultValue="
+            Object.keys(this.$store.getters.activeLocationInfo).length > 0
+              ? $store.getters.activeLocationInfo.org.login
+              : ''
+          "
         />
         <input-text
           @inputText="inputRewardHandler"
@@ -28,7 +40,11 @@
           :name="'reward'"
           :isSmall="true"
           :readOnly="isReadOnlyRewardInput"
-          :defaultValue="Object.keys(this.$store.getters.activeLocationInfo).length > 0 ? String(this.$store.getters.activeLocationInfo.reward) : ''"
+          :defaultValue="
+            Object.keys(this.$store.getters.activeLocationInfo).length > 0
+              ? String(this.$store.getters.activeLocationInfo.reward)
+              : ''
+          "
         />
       </div>
     </div>
@@ -50,11 +66,35 @@
       </div>
       <div class="card-body-item">
         <div class="card-body-item_text">Доступность:</div>
-        <custom-select @input="inputSelectedHandler" :options="selectOptions" :default="Object.keys(this.$store.getters.activeLocationInfo).length > 0 ? String(this.$store.getters.activeLocationInfo.availability) : ''"/>
+        <custom-select
+          @input="inputSelectedHandler"
+          :options="selectOptions"
+          :default="
+            Object.keys(this.$store.getters.activeLocationInfo).length > 0
+              ? String(this.$store.getters.activeLocationInfo.availability)
+              : ''
+          "
+        />
       </div>
       <div class="card-body-item card-body-item__flex-start">
         <div class="card-body-item_text">Уровень загрязнения:</div>
-        <custom-radio-buttons @input="radioHandler" :options="radioOptions" :default="Object.keys(this.$store.getters.activeLocationInfo).length > 0 ? Number(this.$store.getters.activeLocationInfo.contamination) : 0"/>
+        <custom-radio-buttons
+          @input="radioHandler"
+          :options="radioOptions"
+          :default="
+            Object.keys(this.$store.getters.activeLocationInfo).length > 0
+              ? Number(this.$store.getters.activeLocationInfo.contamination)
+              : 0
+          "
+        />
+      </div>
+      <div class="card-body-item card-body-item__left">
+        <div class="card-body-item_text">Участники:</div>
+        {{
+          Object.keys(this.$store.getters.activeLocationInfo).length > 0 && $store.getters.activeLocationInfo.subscribedUsers
+            ? $store.getters.activeLocationInfo.subscribedUsers.length + '/10'
+            : 0 + '/10'
+        }}
       </div>
       <div class="input input__small input-comment">
         <router-link to="/comments" class="input_label input_label__link"
@@ -80,8 +120,36 @@
       >
         Предложить
       </button>
-      <button class="card-body-footer_btn btn" v-if="isVisibleJoinButton">
-        Присоединиться
+      <button
+        @click="connectToLocationHandler"
+        class="card-body-footer_btn btn"
+        :class="{ btn__disable: isConnectedToLocation }"
+        :disabled="isConnectedToLocation"
+        v-if="isVisibleJoinButton"
+      >
+        <template v-if="isConnectedToLocation"> Вы присоединились </template>
+        <template v-else> Присоединиться </template>
+      </button>
+      <button
+        @click="appraisalHandler"
+        class="card-body-footer_btn btn"
+        v-if="isVisibleAppraisalButton"
+      >
+        Оценить
+      </button>
+      <button
+        @click="finishLocationHandler"
+        class="card-body-footer_btn btn"
+        v-if="isVisibleFinishLocationButton"
+      >
+        Завершить
+      </button>
+      <button
+          @click="closeLocationHandler"
+          class="card-body-footer_btn btn"
+          v-if="isVisibleCloseLocationButton"
+      >
+        Закрыть ивент
       </button>
     </div>
   </div>
@@ -137,11 +205,39 @@ export default {
     }
   },
   computed: {
+    isVisibleCloseLocationButton() {
+      return (
+          this.$route.name === 'Search reconciliation id' &&
+          this.$store.getters.activeLocationInfo.status === 'finish'
+      )
+    },
+    isVisibleFinishLocationButton() {
+      return (
+        this.$route.name === 'Profile location id' &&
+        this.$store.getters.activeLocationInfo.status === 'active' &&
+        this.$store.getters.activeLocationInfo.org.id === this.$store.getters.profileInfo.id
+      )
+    },
+    isConnectedToLocation() {
+      if (!this.$store.getters.activeLocationInfo.subscribedUsers) {
+        return
+      }
+      return this.$store.getters.activeLocationInfo.subscribedUsers.some(
+        (user) => this.$store.getters.profileInfo.id === user.id
+      )
+    },
     isVisibleCommentInput() {
       return this.$route.name !== 'History id'
     },
+    isVisibleAppraisalButton() {
+      return this.$route.name === 'Search appraisal id'
+    },
     isVisibleJoinButton() {
-      return this.$route.name === 'Search locations id'
+      return (
+        this.$route.name === 'Search locations id' &&
+        this.$store.getters.profileInfo.id !==
+          this.$store.getters.activeLocationInfo.org.id
+      )
     },
     isDisabledRangeSlider() {
       return this.$route.name !== 'Offer' ? 'disabled' : false
@@ -159,10 +255,21 @@ export default {
   mounted() {
     if (Object.keys(this.$store.getters.activeLocationInfo).length > 0) {
       this.sliderValue = this.$store.getters.activeLocationInfo.square
-
     }
   },
   methods: {
+    closeLocationHandler() {
+      this.$emit('closeLocationHandler')
+    },
+    finishLocationHandler() {
+      this.$emit('finishLocationHandler')
+    },
+    appraisalHandler() {
+      this.$emit('appraisalHandler')
+    },
+    connectToLocationHandler() {
+      this.$emit('connectToLocationHandler')
+    },
     addLocationHandler() {
       this.$emit('addLocationHandler')
     },
@@ -230,6 +337,9 @@ export default {
     align-items: center;
     margin-bottom: 10px;
   }
+  .card-body-item__left {
+    justify-content: flex-start;
+  }
   .card-body-item_text,
   .card-body-item_value {
     font-size: 12px;
@@ -274,7 +384,7 @@ export default {
   .custom-radio-item {
     margin-bottom: 10px;
   }
-  .custom-radio-item input[type=radio] {
+  .custom-radio-item input[type='radio'] {
     display: none;
   }
   .custom-radio-item label {
@@ -288,7 +398,7 @@ export default {
     user-select: none;
   }
   .custom-radio-item label:before {
-    content: "";
+    content: '';
     display: inline-block;
     width: 17px;
     height: 18px;
@@ -299,7 +409,7 @@ export default {
   }
 
   /* Checked */
-  .custom-radio-item input[type=radio]:checked + label:before {
+  .custom-radio-item input[type='radio']:checked + label:before {
     background: url('../assets/img/radio1.png') 0 0 no-repeat;
   }
 
@@ -309,8 +419,12 @@ export default {
   }
 
   /* Disabled */
-  .custom-radio-item input[type=radio]:disabled + label:before {
+  .custom-radio-item input[type='radio']:disabled + label:before {
     filter: grayscale(100%);
+  }
+
+  .input-comment {
+    max-width: none;
   }
 }
 </style>

@@ -11,6 +11,10 @@
         @inputReward="inputReward"
         @inputSlider="inputSlider"
         @addLocationHandler="addLocation"
+        @connectToLocationHandler="connectToLocation"
+        @appraisalHandler="appraisalHandler"
+        @finishLocationHandler="finishLocation"
+        @closeLocationHandler="closeLocation"
       />
     </div>
   </div>
@@ -57,14 +61,46 @@ export default {
     }
   },
   methods: {
+    closeLocation() {
+      this.changeLocationStatus('history')
+    },
+    finishLocation() {
+      this.changeLocationStatus('finish')
+    },
+    appraisalHandler() {
+      this.changeLocationStatus('active')
+    },
+    async changeLocationStatus(status) {
+      const activeLocation = this.$store.getters.activeLocationInfo
+      if (Object.keys(activeLocation).length === 0) {
+        return
+      }
+      await this.$store.dispatch('CHANGE_LOCATION_STATUS', {
+        id: activeLocation.id,
+        status: status
+      })
+    },
+    async connectToLocation() {
+      const activeLocation = this.$store.getters.activeLocationInfo
+      if (Object.keys(activeLocation).length === 0) {
+        return
+      }
+      await this.$store.dispatch(
+        'ADD_PARTICIPANT_TO_LOCATION',
+        activeLocation.id
+      )
+    },
     addLocation() {
+      if (!this.coords || !this.date || !this.$store.getters.profileInfo.id || !this.radio || !this.reward || !this.slider || !this.selected) {
+        return
+      }
       const payload = {
         geotag: this.coords,
         start_date: new Date(),
         end_date: this.date,
         org: this.$store.getters.profileInfo.id,
         contamination: this.radio,
-        status: 'start', // end or whatever
+        status: 'prepare', // end or whatever
         reward: Number(this.reward), // награда
         square: Number(this.slider), // площадь
         availability: this.selected
@@ -100,7 +136,7 @@ export default {
 .location {
   min-height: 440px;
   height: calc(100vh - 60px);
-  background: url("../assets/img/offer-bg.svg") top center no-repeat;
+  background: url('../assets/img/offer-bg.svg') top center no-repeat;
   background-size: cover;
   overflow-x: hidden;
   text-align: center;

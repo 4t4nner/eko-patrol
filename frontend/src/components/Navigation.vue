@@ -58,6 +58,8 @@ export default {
         this.$route.name === 'Search locations id' ||
         this.$route.name === 'Search reconciliation' ||
         this.$route.name === 'Search reconciliation id' ||
+        this.$route.name === 'Search appraisal' ||
+        this.$route.name === 'Search appraisal id' ||
         this.$route.name === 'History id' ||
         this.$route.name === 'Comments'
       )
@@ -65,6 +67,9 @@ export default {
   },
   methods: {
     linkHandler(link) {
+      if (this.$route.path === link) {
+        return
+      }
       if (link === '/offer') {
         this.$router.push('/clear')
       } else {

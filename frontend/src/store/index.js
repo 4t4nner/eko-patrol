@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
 
+const url = 'http://192.168.88.235:8000'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -47,9 +49,56 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    CHANGE_LOCATION_STATUS(context, data) {
+      fetch(`${url}/location/${data.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({status: data.status})
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          if (data) {
+            console.log('success')
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+      if (data.status === 'active' || data.status === 'history') {
+        router.push('/search')
+      }
+      if (data.status === 'finish') {
+        router.push('/profile')
+      }
+    },
+    ADD_PARTICIPANT_TO_LOCATION(context, data) {
+      const currentData = {participant_id: context.state.profileInfo.id, location_id: data}
+      fetch(`${url}/location/participant`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(currentData)
+      })
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          if (data) {
+            router.push('/profile')
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    },
     UPDATE_USER_INFO(context) {
       fetch(
-        `http://192.168.88.235:8000/user?id=${context.state.profileInfo.id}`
+        `${url}/user?id=${context.state.profileInfo.id}`
       )
         .then((response) => {
           return response.json()
@@ -64,7 +113,7 @@ export default new Vuex.Store({
         })
     },
     GET_LOCATIONS(context) {
-      fetch('http://192.168.88.235:8000/location')
+      fetch(`${url}/location`)
         .then((response) => {
           return response.json()
         })
@@ -78,7 +127,7 @@ export default new Vuex.Store({
         })
     },
     ADD_LOCATION(context, data) {
-      fetch('http://192.168.88.235:8000/location', {
+      fetch(`${url}/location`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -90,7 +139,7 @@ export default new Vuex.Store({
         })
         .then((data) => {
           if (data) {
-            router.push('/clear')
+            router.push('/profile')
           }
         })
         .catch((e) => {
@@ -98,7 +147,7 @@ export default new Vuex.Store({
         })
     },
     REGISTRATION(context, data) {
-      fetch('http://192.168.88.235:8000/user', {
+      fetch(`${url}/user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -122,7 +171,7 @@ export default new Vuex.Store({
     },
     LOGIN(context, data) {
       fetch(
-        `http://192.168.88.235:8000/auth?login=${data.login}&password=${data.password}`
+        `${url}/auth?login=${data.login}&password=${data.password}`
       )
         .then((response) => {
           return response.json()
