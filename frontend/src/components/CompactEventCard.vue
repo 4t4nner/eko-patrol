@@ -1,12 +1,24 @@
 <template>
   <div class="compact-event-card">
-      <img class="card-icon" src="../assets/img/location-icon.png" alt="location icon">
-      <div class="card-content">
-        <div class="card-content_item">{{ locationInfo.end_date.substr(0, 10) }}</div>
-        <div class="card-content_item">{{ locationInfo.reward + 'б' }}</div>
-        <div class="card-content_item">{{ locationInfo.org.login }}</div>
-        <div class="card-content_item">9/10</div>
+    <img
+      class="card-icon"
+      src="../assets/img/location-icon.png"
+      alt="location icon"
+    />
+    <div class="card-content">
+      <div class="card-content_item">
+        {{ locationInfo.end_date.substr(0, 10) }}
       </div>
+      <div class="card-content_item">{{ locationInfo.reward + 'б' }}</div>
+      <div class="card-content_item">{{ locationInfo.org.login }}</div>
+      <div class="card-content_item">
+        {{
+          Object.keys(locationInfo).length > 0 && locationInfo.subscribedUsers
+            ? locationInfo.subscribedUsers.length + '/10'
+            : 0 + '/10'
+        }}
+      </div>
+    </div>
   </div>
 </template>
 

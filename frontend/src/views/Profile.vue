@@ -22,10 +22,10 @@
       <div class="exp-wrapper">
         <div class="exp-bar-wrapper">
           <div class="exp-bar_text">
-            {{ $store.getters.profileInfo.rating }}/100
+            {{ $store.getters.profileInfo.rating }}/1000
           </div>
           <k-progress
-            :percent="$store.getters.profileInfo.rating"
+            :percent="$store.getters.profileInfo.rating * 100 / 1000"
             :color="'#F38181'"
             :bg-color="'#FCE38A'"
             :show-text="false"
@@ -121,12 +121,12 @@ export default {
   computed: {
     participantCurrentLocation() {
       return this.$store.getters.currentLocations.filter(
-        (location) => location.org.id !== this.$store.getters.profileInfo.id
+        (location) => location.org.id !== this.$store.getters.profileInfo.id && location.subscribedUsers && location.subscribedUsers.some(user => user.id === this.$store.getters.profileInfo.id) && location.status === 'active'
       )
     },
     orgCurrentLocation() {
       return this.$store.getters.currentLocations.filter(
-        (location) => location.org.id === this.$store.getters.profileInfo.id
+        (location) => location.org.id === this.$store.getters.profileInfo.id && (location.status === 'active' || location.status === 'prepare')
       )
     }
   },

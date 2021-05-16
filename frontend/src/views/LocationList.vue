@@ -32,15 +32,34 @@ export default {
     },
     currentLocationList() {
       return this.$store.getters.currentLocations.filter((location) => {
-        if (this.$route.name === 'Search locations') {
-          return location.status === 'active'
-        } else if (this.$route.name === 'Search appraisal') {
-          return location.status === 'finish'
-        } else if (this.$route.name === 'Search reconciliation') {
-          return location.status === 'prepare'
-        } else if (this.$route.name === 'History') {
-          return location.status === 'history'
-        } else {
+        if (
+          this.$route.name === 'Search locations' &&
+          location.status === 'active'
+        ) {
+          return location
+        }
+        if (
+          this.$route.name === 'Search appraisal' &&
+          location.status === 'prepare' &&
+          this.$store.getters.profileInfo.id !== location.org.id
+        ) {
+          return location
+        }
+        if (
+          this.$route.name === 'Search reconciliation' &&
+          location.status === 'finish' &&
+          this.$store.getters.profileInfo.id !== location.org.id
+        ) {
+          return location
+        }
+        if (
+          this.$route.name === 'History' &&
+          location.status === 'history' &&
+          (this.$store.getters.profileInfo.id === location.org.id ||
+            location.subscribedUsers.some(
+              (user) => this.$store.getters.profileInfo.id === user.id
+            ))
+        ) {
           return location
         }
       })
@@ -68,7 +87,7 @@ export default {
   min-height: 440px;
   height: calc(100vh - 60px);
   padding: 0 20px;
-  background: url("../assets/img/shop-bg.svg") top center no-repeat;
+  background: url('../assets/img/shop-bg.svg') top center no-repeat;
   background-size: cover;
   overflow-x: hidden;
   text-align: center;
