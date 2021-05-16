@@ -304,7 +304,7 @@ export default {
 @import '../assets/styles/variables';
 
 .event-card {
-  padding: 15px 20px;
+  padding: 15px 20px 20px;
 
   .card-header {
     display: flex;
