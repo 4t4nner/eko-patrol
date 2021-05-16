@@ -27,8 +27,8 @@ export default {
   computed: {
     locationListTitle() {
       return this.currentLocationList.length > 0
-        ? 'Выберите ивент'
-        : 'Ивентов нет'
+        ? 'Выберите локацию'
+        : 'Локаций нет'
     },
     currentLocationList() {
       return this.$store.getters.currentLocations.filter((location) => {

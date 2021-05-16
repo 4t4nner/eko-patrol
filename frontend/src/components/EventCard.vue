@@ -149,7 +149,7 @@
           class="card-body-footer_btn btn"
           v-if="isVisibleCloseLocationButton"
       >
-        Закрыть ивент
+        Закрыть
       </button>
     </div>
   </div>

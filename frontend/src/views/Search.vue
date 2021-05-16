@@ -6,7 +6,7 @@
         <router-link
           to="/search/locations"
           class="btn btn__arrow search-item_link"
-          >Локации</router-link
+          >Найти локации</router-link
         >
       </div>
       <div class="search-item">
@@ -14,7 +14,7 @@
           <router-link
             to="/search/appraisal"
             class="btn btn__arrow search-item_link"
-            >Оценка</router-link
+            >Оценить локации</router-link
           >
         </template>
         <template v-else>
@@ -27,7 +27,7 @@
           <router-link
             to="/search/reconciliation"
             class="btn btn__arrow search-item_link"
-            >Согласование</router-link
+            >Завершить локации</router-link
           >
         </template>
         <template v-else>

@@ -66,9 +66,9 @@
           "
           class="body-title"
         >
-          Нет активных ивентов
+          Нет активных локаций
         </div>
-        <div v-else class="body-title">Текущие ивенты</div>
+        <div v-else class="body-title">Текущие локации</div>
         <template
           v-if="
             activeCurrentLocationTab === 'participant' &&
