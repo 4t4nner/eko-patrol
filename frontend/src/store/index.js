@@ -27,7 +27,7 @@ export default new Vuex.Store({
     },
     profileInfo(state) {
       return state.profileInfo
-    },
+    }
   },
   mutations: {
     SET_CURRENT_LOCATIONS(state, data) {
@@ -47,8 +47,24 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    GET_CURRENT_LOCATIONS(context) {
-      fetch(`http://192.168.88.235:8000/location/?org=${context.state.profileInfo.id}&participant_id=${context.state.profileInfo.id}`)
+    UPDATE_USER_INFO(context) {
+      fetch(
+        `http://192.168.88.235:8000/user?id=${context.state.profileInfo.id}`
+      )
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          if (data) {
+            context.commit('SET_PROFILE_INFO', data)
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+        })
+    },
+    GET_LOCATIONS(context) {
+      fetch('http://192.168.88.235:8000/location')
         .then((response) => {
           return response.json()
         })
@@ -105,7 +121,9 @@ export default new Vuex.Store({
         })
     },
     LOGIN(context, data) {
-      fetch(`http://192.168.88.235:8000/auth?login=${data.login}&password=${data.password}`)
+      fetch(
+        `http://192.168.88.235:8000/auth?login=${data.login}&password=${data.password}`
+      )
         .then((response) => {
           return response.json()
         })

@@ -21,7 +21,9 @@
       </div>
       <div class="exp-wrapper">
         <div class="exp-bar-wrapper">
-          <div class="exp-bar_text">{{ $store.getters.profileInfo.rating }}/100</div>
+          <div class="exp-bar_text">
+            {{ $store.getters.profileInfo.rating }}/100
+          </div>
           <k-progress
             :percent="30"
             :color="'#F38181'"
@@ -128,9 +130,11 @@ export default {
       )
     }
   },
+  async created() {
+    await this.$store.dispatch('UPDATE_USER_INFO')
+  },
   mounted() {
     this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/profile')
-    this.$store.dispatch('GET_CURRENT_LOCATIONS')
   },
   methods: {
     changeActiveTab(param) {

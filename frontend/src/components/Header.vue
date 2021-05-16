@@ -2,14 +2,14 @@
   <div class="header">
     <button @click="logOutHandler" class="header_btn btn">Выйти</button>
     <div v-if="isVisibleBalance" class="header-balance">
-      <div class="header-balance_value">{{ $store.getters.profileInfo.score }} баллов</div>
+      <div class="header-balance_value">
+        {{ $store.getters.profileInfo.score }} баллов
+      </div>
       <router-link to="/shop" class="header_link header-balance_link"
         >обменять
       </router-link>
     </div>
-    <div v-if="isVisiblOpenMap" class="header_link">
-      Показать на карте
-    </div>
+    <div v-if="isVisiblOpenMap" class="header_link">Показать на карте</div>
   </div>
 </template>
 
@@ -21,7 +21,12 @@ export default {
       return this.$route.name === 'Profile'
     },
     isVisiblOpenMap() {
-      return this.$route.name === 'Locations'
+      return (
+        this.$route.name === 'Search locations' ||
+        this.$route.name === 'Search appraisal' ||
+        this.$route.name === 'Search reconciliation' ||
+        this.$route.name === 'History'
+      )
     }
   },
   methods: {

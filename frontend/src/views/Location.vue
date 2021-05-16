@@ -42,7 +42,7 @@ export default {
   created() {
     if (this.$route.params.locationId) {
       const data = this.$store.getters.currentLocations.find(
-          (location) => location.id === Number(this.$route.params.locationId)
+        (location) => location.id === Number(this.$route.params.locationId)
       )
       if (data) {
         this.$store.commit('SET_LOCATION_INFO', data)

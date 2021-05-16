@@ -10,15 +10,30 @@
         >
       </div>
       <div class="search-item">
-        <router-link
-          to="/search/reconciliation"
-          class="btn btn__arrow search-item_link"
-          >Оценка</router-link
-        >
+        <template v-if="$store.getters.profileInfo.level >= 2">
+          <router-link
+            to="/search/appraisal"
+            class="btn btn__arrow search-item_link"
+            >Оценка</router-link
+          >
+        </template>
+        <template v-else>
+          <div class="search-item_text">Оценка</div>
+          <button class="btn btn__disable">Откроется со 2 уровня</button>
+        </template>
       </div>
       <div class="search-item">
-        <div class="search-item_text">Согласование</div>
-        <button class="btn btn__disable">Откроется с 10 уровня</button>
+        <template v-if="$store.getters.profileInfo.level >= 3">
+          <router-link
+            to="/search/reconciliation"
+            class="btn btn__arrow search-item_link"
+            >Согласование</router-link
+          >
+        </template>
+        <template v-else>
+          <div class="search-item_text">Согласование</div>
+          <button class="btn btn__disable">Откроется с 3 уровня</button>
+        </template>
       </div>
     </div>
   </div>
@@ -31,6 +46,9 @@ export default {
   name: 'Search',
   components: {
     Header
+  },
+  async created() {
+    await this.$store.dispatch('UPDATE_USER_INFO')
   },
   mounted() {
     this.$store.commit('SET_ACTIVE_ROOTE_PAGE', '/search')
