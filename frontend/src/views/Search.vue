@@ -27,7 +27,7 @@
           <router-link
             to="/search/reconciliation"
             class="btn btn__arrow search-item_link"
-            >Завершить локации</router-link
+            >Закрыть локации</router-link
           >
         </template>
         <template v-else>
