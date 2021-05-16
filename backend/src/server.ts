@@ -8,11 +8,19 @@ import {promises as fs} from "fs";
 import * as path from "path";
 import dateformat from "dateformat";
 import {
-    batchInsert, getById,
-    getConfirmers, getEntity, getLocation, getLocationParticipantCount,
+    batchInsert,
+    getById,
+    getConfirmers,
+    getEntity,
+    getLocation,
+    getLocationParticipantCount,
+    getLocationParticipants,
+    getLocationParticipantsUsers,
     // getLocationById,
     getLocationPhoto,
-    getParticipantLocation, getUserByLogin, getUsers,
+    getParticipantLocation,
+    getUserByLogin,
+    getUsers,
     query,
     updateById
 } from "./sql"
@@ -144,12 +152,19 @@ app.get('/location', async (req,res) => {
         });
 
         // @ts-ignore
-        const getLocCountPromise = getLocationParticipantCount(locIds).then((resCount) => {
-            resCount.forEach(({location_id, count}) => {
-                const loc = locMap.get(location_id);
-                loc['subscribedUsers'] = `${count}/10`;
+        const getLocCountPromise = getLocationParticipantsUsers(locIds).then((users) => {
+            users.forEach(user => {
+                user.locations.forEach((locId: number) => {
+                    const loc = locMap.get(locId);
+                    if(!loc.subscribedUsers){
+                        loc.subscribedUsers = []
+                    }
+                    loc.subscribedUsers.push(user)
+                })
             });
         });
+        
+        
 
         const getLocationPhotoPromise = getLocationPhoto(locIds).then(tempLocPhoto => {
             tempLocPhoto.forEach(({photo, pl}) => {
@@ -171,7 +186,6 @@ app.get('/location', async (req,res) => {
                 const loc = locMap.get(Number(locId));
                 // @ts-ignore
                 loc['org'] = mUsers.get(orgUserId);
-                console.log(loc);
             });
         });
 
@@ -219,12 +233,14 @@ app.post('/location/:id?', upload.any(), async (req, res) => {
         let location: Record<string,any> = {
             ...(id ? {} : {creation_date: formatDate()})
         };
-        location.geotag = JSON.stringify(req.body.geotag);
+        if(req.body.geotag){
+            location.geotag = JSON.stringify(req.body.geotag);
+        }
         ['org', 'status', 'reward', 'square', 'availability', 'contamination'].forEach(n => {
-            location[n] = req.body[n];
+            req.body[n] && (location[n] = req.body[n]);
         });
         ['start_date', 'end_date'].forEach(n => {
-            location[n] = formatDate(req.body[n]);
+            req.body[n] && (location[n] = formatDate(req.body[n]));
         });
 
         let addedLocation;

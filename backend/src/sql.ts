@@ -140,9 +140,40 @@ GROUP BY location_id`;
     return query(sql)
 }
 
-export function getLocationParticipants(locationId: number) {
-    const sql = `SELECT user_id FROM participant WHERE location_id=${locationId}`;
+export function getLocationParticipants(locationId: number | number[]) {
+    const cond = Array.isArray(locationId)
+        ? `location_id IN (${locationId.join(',')})`
+        : `location_id=${locationId}`
+    const sql = `SELECT user_id FROM participant WHERE ${cond}`;
     return query(sql).then(ps => ps.map(({user_id}) => user_id))
+}
+export function getLocationParticipantsUsers(locationIds: number[]) {
+    
+    const sql = `SELECT * FROM participant
+LEFT JOIN user u on participant.user_id = u.id
+WHERE participant.location_id IN (${locationIds})`;
+    return query({
+        sql,
+        nestTables: true
+    }).then(r => {
+        let users = new Map();
+        // @ts-ignore
+        r.forEach(({participant, u}: Record<string,Record<string,string | number>>) => {
+            let mapUser = users.get(u.id);
+            let {location_id} = participant;
+            if(!mapUser){
+                users.set(u.id, u);
+                // @ts-ignore
+                u.locations = new Set([location_id]);
+            } else {
+                mapUser.locations.set(location_id)
+            }
+        });
+        users.forEach(u => {
+            u.locations = Array.from(u.locations)
+        });
+        return users;
+    })
 }
 
 
